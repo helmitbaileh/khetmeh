@@ -55,7 +55,6 @@
         padding-bottom: 48px;
       }
 
-      /* ─── HEADER ─── */
       header {
         background: linear-gradient(155deg, var(--gd) 0%, var(--g) 100%);
         padding: 30px 24px 26px;
@@ -127,14 +126,12 @@
         font-weight: 300;
       }
 
-      /* ─── CONTAINER ─── */
       .wrap {
         max-width: 680px;
         margin: 0 auto;
         padding: 20px 13px;
       }
 
-      /* ─── MY BOOKING BANNER ─── */
       .my-banner {
         background: linear-gradient(135deg, var(--gs) 0%, #d8f0e4 100%);
         border: 1.5px solid #96ccb0;
@@ -233,7 +230,6 @@
         background: #fde4e4;
       }
 
-      /* ─── KHATMA CARD ─── */
       .khatma-card {
         background: var(--card);
         border-radius: 17px;
@@ -270,7 +266,87 @@
         color: var(--gd);
       }
 
-      /* ─── PARTS GRID ─── */
+      .prog-wrap {
+        padding: 12px 18px 14px;
+        border-bottom: 1px solid var(--brl);
+      }
+      .prog-labels {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 7px;
+      }
+      .prog-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--mu);
+        letter-spacing: 0.5px;
+      }
+      .prog-nums {
+        display: flex;
+        gap: 12px;
+      }
+      .prog-num {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .prog-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .pd-booked {
+        background: #7cc4a0;
+      }
+      .pd-done {
+        background: var(--g);
+      }
+      .pd-avail {
+        background: var(--brl);
+      }
+      .prog-track {
+        height: 8px;
+        background: var(--brl);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+      }
+      .prog-fill {
+        height: 100%;
+        border-radius: 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .pf-booked {
+        background: linear-gradient(90deg, #7cc4a0, #a8d8bc);
+        z-index: 1;
+      }
+      .pf-done {
+        background: linear-gradient(90deg, var(--gd), var(--g));
+        z-index: 2;
+      }
+
+      .prog-milestones {
+        position: relative;
+        height: 0;
+      }
+      .prog-mark {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 1px;
+        z-index: 3;
+        transform: translateX(50%);
+      }
+
       .parts-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -304,7 +380,7 @@
       .pi.rs {
         background: var(--res-bg);
       }
-      /* MY part — highlighted on owner's device */
+
       .pi.mine {
         background: #edf8f2;
         border-right: 3px solid var(--g);
@@ -408,7 +484,6 @@
         color: var(--g);
       }
 
-      /* ─── LOADER ─── */
       .loader {
         text-align: center;
         padding: 70px 20px;
@@ -432,7 +507,6 @@
         font-size: 0.84rem;
       }
 
-      /* ─── OVERLAY + SHEET ─── */
       .ov {
         position: fixed;
         inset: 0;
@@ -668,7 +742,6 @@
         cursor: pointer;
       }
 
-      /* ─── FOOTER ─── */
       footer {
         margin-top: 30px;
         padding: 16px 16px 24px;
@@ -719,7 +792,7 @@
             onerror="this.style.display = 'none'"
           />
         </div>
-        <h1>الختمات القرآنية</h1>
+        <h1>مشروع الختمات</h1>
       </div>
     </header>
 
@@ -961,6 +1034,7 @@
       function clearBooking(kid, pnum) {
         localStorage.removeItem(lsKey(kid, pnum));
       }
+
       function myBookings() {
         const results = [];
         for (let k in localStorage) {
@@ -1077,10 +1151,34 @@
 
           const card = document.createElement("div");
           card.className = "khatma-card";
+          const done = Object.values(km.parts).filter(
+            (p) => p.completed && p.status === "reserved",
+          ).length;
+          const bookedPct = ((res / 30) * 100).toFixed(1);
+          const donePct = ((done / 30) * 100).toFixed(1);
+
+          const marks = [25, 50, 75]
+            .map((m) => `<div class="prog-mark" style="right:${m}%"></div>`)
+            .join("");
           card.innerHTML = `
         <div class="khatma-hdr">
           <div class="khatma-name">${km.name}</div>
           <div class="khatma-badge"><b>${res}</b> / 30 محجوز</div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-labels">
+            <span class="prog-title">التقدم في الختمة</span>
+            <div class="prog-nums">
+              <span class="prog-num"><span class="prog-dot pd-done"></span><span style="color:var(--g)">${done}</span>&nbsp;مكتمل</span>
+              <span class="prog-num"><span class="prog-dot pd-booked"></span><span style="color:var(--mu)">${res - done}</span>&nbsp;محجوز</span>
+              <span class="prog-num"><span class="prog-dot pd-avail"></span><span style="color:var(--su)">${30 - res}</span>&nbsp;متاح</span>
+            </div>
+          </div>
+          <div class="prog-track">
+            <div class="prog-milestones">${marks}</div>
+            <div class="prog-fill pf-booked" style="width:${bookedPct}%"></div>
+            <div class="prog-fill pf-done"   style="width:${donePct}%"></div>
+          </div>
         </div>
         <div class="parts-grid">${html}</div>`;
           root.appendChild(card);
@@ -1131,9 +1229,9 @@
             [`parts.part_${PNUM}.universityId`]: uid,
             [`parts.part_${PNUM}.completed`]: false,
           });
-          // Save to this device's localStorage
+
           saveBooking(KID, PNUM);
-          // Prepare read link in success sheet
+
           document.getElementById("btn-read-now").href =
             `https://quran.com/ar/juz/${PNUM}`;
           const savedKID = KID,
@@ -1151,7 +1249,6 @@
         }
       };
 
-      // ─── Mark as done ───
       window.askDone = (kid, pnum, jname) => {
         KID = kid;
         PNUM = pnum;
@@ -1180,7 +1277,6 @@
         }
       };
 
-      // ─── Cancel booking ───
       window.askCancel = (kid, pnum, jname) => {
         KID = kid;
         PNUM = pnum;
@@ -1212,7 +1308,6 @@
         }
       };
 
-      // ─── Sheet helpers ───
       function show(id) {
         document.getElementById(id).classList.add("on");
       }
