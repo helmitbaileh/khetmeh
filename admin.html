@@ -8,27 +8,30 @@
       href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
       :root {
-        --primary: #1a5c38;
-        --primary-mid: #2d7a50;
-        --primary-light: #e8f5ee;
-        --primary-pale: #f4fbf7;
-        --accent: #c8a96e;
-        --accent-light: #fdf6ea;
-        --bg: #f5f5f3;
-        --card: #ffffff;
-        --text: #1c1c1e;
-        --text-muted: #8a8a8e;
-        --text-sub: #6b7280;
-        --border: #e8e8e6;
-        --border-light: #f0f0ee;
-        --danger: #c0392b;
+        --green: #1e6b42;
+        --green-dark: #145230;
+        --green-mid: #2a8a57;
+        --green-soft: #eaf6f0;
+        --green-pale: #f5fbf7;
+        --gold: #a07820;
+        --gold-soft: #fdf5e4;
+        --gold-border: rgba(160, 120, 32, 0.22);
+        --bg: #f6f6f4;
+        --card: #fff;
+        --text: #181a18;
+        --muted: #787b79;
+        --sub: #a3a6a4;
+        --border: #e3e5e3;
+        --border-lt: #eceeed;
+        --danger: #b83232;
         --danger-light: #fdf1f0;
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.07);
-        --radius: 14px;
+        --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.07);
+        --r: 13px;
       }
-
       *,
       *::before,
       *::after {
@@ -36,7 +39,6 @@
         margin: 0;
         padding: 0;
       }
-
       body {
         background: var(--bg);
         color: var(--text);
@@ -44,13 +46,18 @@
         padding-bottom: 60px;
       }
 
-      /* ── Header ── */
+      /* HEADER */
       header {
-        background: var(--primary);
-        padding: 28px 32px;
+        background: linear-gradient(
+          155deg,
+          var(--green-dark) 0%,
+          var(--green) 100%
+        );
+        padding: 24px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 16px;
         position: relative;
         overflow: hidden;
       }
@@ -64,252 +71,294 @@
         background: linear-gradient(
           90deg,
           transparent,
-          var(--accent),
+          var(--gold) 40%,
+          #d4a830 60%,
           transparent
         );
       }
-      .header-title {
+      .h-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .h-logo {
+        height: 44px;
+        width: auto;
+        border-radius: 9px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+        padding: 2px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .h-title {
         font-family: "Amiri", serif;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: 700;
         color: #fff;
       }
-      .header-badge {
-        background: rgba(200, 169, 110, 0.2);
-        border: 1px solid rgba(200, 169, 110, 0.4);
-        color: var(--accent);
-        font-size: 0.72rem;
+      .h-badge {
+        background: rgba(160, 120, 32, 0.2);
+        border: 1px solid rgba(160, 120, 32, 0.38);
+        color: #d4a830;
+        font-size: 0.68rem;
         font-weight: 700;
-        letter-spacing: 1.5px;
-        padding: 5px 12px;
-        border-radius: 20px;
+        letter-spacing: 1.3px;
+        padding: 4px 11px;
+        border-radius: 18px;
+        white-space: nowrap;
       }
 
+      /* CONTAINER */
       .container {
-        max-width: 900px;
+        max-width: 960px;
         margin: 0 auto;
-        padding: 28px 20px;
+        padding: 24px 18px;
       }
 
-      /* ── Card ── */
+      /* CARD */
       .card {
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 18px;
-        margin-bottom: 24px;
+        border-radius: 16px;
+        margin-bottom: 22px;
         overflow: hidden;
         box-shadow: var(--shadow-sm);
       }
-      .card-header {
-        padding: 20px 24px;
-        border-bottom: 1px solid var(--border-light);
+      .card-hdr {
+        padding: 17px 20px 14px;
+        border-bottom: 1px solid var(--border-lt);
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+        flex-wrap: wrap;
       }
-      .card-header-left {
+      .card-hdr-l {
         display: flex;
         flex-direction: column;
-        gap: 3px;
+        gap: 2px;
       }
-      .card-label {
-        font-size: 0.68rem;
+      .card-lbl {
+        font-size: 0.62rem;
         font-weight: 700;
-        letter-spacing: 1.5px;
-        color: var(--text-muted);
+        letter-spacing: 1.4px;
+        color: var(--sub);
         text-transform: uppercase;
       }
       .card-title {
         font-family: "Amiri", serif;
-        font-size: 1.25rem;
+        font-size: 1.18rem;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--green);
       }
       .card-body {
-        padding: 24px;
+        padding: 20px;
       }
 
-      /* ── Create form ── */
+      /* STATS */
+      .stats-bar {
+        display: flex;
+        gap: 6px;
+        padding: 13px 19px;
+        background: var(--green-pale);
+        border-bottom: 1px solid var(--border-lt);
+        flex-wrap: wrap;
+      }
+      .stat {
+        font-size: 0.78rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .stat b {
+        color: var(--green-dark);
+        font-weight: 700;
+      }
+      .sep {
+        color: var(--border);
+      }
+
+      /* ACTIONS ROW */
+      .actions-row {
+        display: flex;
+        gap: 8px;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border-lt);
+        flex-wrap: wrap;
+      }
+
+      /* GRID */
+      .parts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1px;
+        background: var(--border-lt);
+      }
+      .pa {
+        background: var(--card);
+        padding: 12px 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .pa.rs {
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .pa.rs:hover {
+        background: #fff8f3;
+      }
+      .pa-num {
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--sub);
+      }
+      .pa.av .pa-num {
+        color: var(--green-mid);
+      }
+      .pa-name {
+        font-family: "Amiri", serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--muted);
+        line-height: 1.22;
+      }
+      .pa.av .pa-name {
+        color: var(--green);
+      }
+      .pa-status {
+        font-size: 0.67rem;
+        color: var(--green-mid);
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .rsv-chip {
+        display: inline-block;
+        background: var(--gold-soft);
+        border: 1px solid var(--gold-border);
+        color: var(--gold);
+        font-size: 0.67rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        margin-top: 3px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .rsv-uid {
+        font-size: 0.63rem;
+        color: var(--muted);
+        margin-top: 1px;
+        direction: ltr;
+        text-align: right;
+      }
+      .hint-rs {
+        font-size: 0.6rem;
+        color: var(--danger);
+        margin-top: 3px;
+        font-weight: 500;
+        opacity: 0.75;
+      }
+
+      /* FORM */
+      .hint {
+        font-size: 0.78rem;
+        color: var(--muted);
+        background: var(--bg);
+        padding: 9px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        margin-bottom: 16px;
+        line-height: 1.6;
+      }
       .form-row {
         display: flex;
-        gap: 10px;
+        gap: 9px;
+        flex-wrap: wrap;
       }
-      .input-styled {
+      .inp {
         flex: 1;
-        padding: 13px 16px;
+        min-width: 180px;
+        padding: 12px 14px;
         border: 1.5px solid var(--border);
-        border-radius: 10px;
-        font-size: 0.95rem;
+        border-radius: 9px;
+        font-size: 0.92rem;
         font-family: "Tajawal", sans-serif;
         font-weight: 500;
         color: var(--text);
         background: var(--bg);
         outline: none;
         transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
+          border-color 0.17s,
+          box-shadow 0.17s;
       }
-      .input-styled:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(26, 92, 56, 0.08);
+      .inp:focus {
+        border-color: var(--green);
         background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 107, 66, 0.09);
       }
-      .input-styled::placeholder {
-        color: var(--text-muted);
+      .inp::placeholder {
+        color: var(--sub);
       }
 
+      /* BTNS */
       .btn {
-        padding: 13px 22px;
+        padding: 11px 18px;
         border: none;
-        border-radius: 10px;
-        font-size: 0.9rem;
+        border-radius: 9px;
+        font-size: 0.86rem;
         font-family: "Tajawal", sans-serif;
         font-weight: 700;
         cursor: pointer;
         transition:
-          opacity 0.15s,
-          transform 0.1s;
+          opacity 0.12s,
+          transform 0.08s;
         white-space: nowrap;
       }
       .btn:active {
         transform: scale(0.97);
       }
-      .btn-primary {
-        background: var(--primary);
+      .btn-g {
+        background: var(--green);
         color: #fff;
+        box-shadow: 0 3px 12px rgba(30, 107, 66, 0.22);
       }
-      .btn-primary:hover {
-        background: var(--primary-mid);
+      .btn-g:hover {
+        background: var(--green-mid);
       }
-      .btn-danger {
+      .btn-d {
         background: var(--danger-light);
         color: var(--danger);
-        border: 1px solid rgba(192, 57, 43, 0.2);
+        border: 1px solid rgba(184, 50, 50, 0.18);
       }
-      .btn-danger:hover {
-        background: #fde8e6;
+      .btn-d:hover {
+        background: #fde4e4;
       }
-
-      /* ── Parts Grid ── */
-      .parts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1px;
-        background: var(--border-light);
-        border-top: 1px solid var(--border-light);
+      .btn-xl {
+        background: var(--green-soft);
+        color: var(--green-dark);
+        border: 1px solid #b4d9c4;
       }
-
-      .part-admin {
-        background: var(--card);
-        padding: 14px 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-      }
-      .part-admin-num {
-        font-size: 0.62rem;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-      .part-admin-name {
-        font-family: "Amiri", serif;
-        font-size: 0.92rem;
-        font-weight: 700;
-        color: var(--text-sub);
-        line-height: 1.3;
-      }
-      .part-admin.available .part-admin-name {
-        color: var(--primary);
-      }
-      .part-admin-status {
-        font-size: 0.7rem;
-        font-weight: 500;
-        margin-top: 2px;
-      }
-      .part-admin.available .part-admin-status {
-        color: var(--primary-mid);
-      }
-      .part-admin.reserved {
-        cursor: pointer;
-        transition: background 0.15s;
-      }
-      .part-admin.reserved:hover {
-        background: #fef9f5;
+      .btn-xl:hover {
+        background: #d0edde;
       }
 
-      .reserved-name-admin {
-        display: inline-block;
-        background: var(--accent-light);
-        border: 1px solid rgba(200, 169, 110, 0.3);
-        color: #7a5a1e;
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 5px;
-        margin-top: 4px;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .reset-hint {
-        font-size: 0.65rem;
-        color: var(--danger);
-        margin-top: 3px;
-        opacity: 0.7;
-        font-weight: 500;
-      }
-
-      /* ── Stats row ── */
-      .stats-row {
-        display: flex;
-        gap: 8px;
-        padding: 16px 24px;
-        border-bottom: 1px solid var(--border-light);
-        background: var(--primary-pale);
-      }
-      .stat {
-        font-size: 0.82rem;
-        color: var(--text-muted);
-        font-weight: 500;
-      }
-      .stat strong {
-        color: var(--primary);
-        font-weight: 700;
-      }
-      .stat-sep {
-        color: var(--border);
-      }
-
-      /* ── Hint ── */
-      .hint {
-        font-size: 0.78rem;
-        color: var(--text-muted);
-        background: var(--bg);
-        padding: 10px 16px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        margin-bottom: 20px;
-        line-height: 1.6;
-      }
-
-      /* loader */
+      /* LOADER */
       .loader {
         text-align: center;
         padding: 60px 20px;
-        color: var(--text-muted);
+        color: var(--muted);
       }
-      .loader-ring {
-        width: 36px;
-        height: 36px;
+      .ring {
+        width: 34px;
+        height: 34px;
         border: 3px solid var(--border);
-        border-top-color: var(--primary);
+        border-top-color: var(--green);
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin: 0 auto 14px;
+        animation: spin 0.75s linear infinite;
+        margin: 0 auto 12px;
       }
       @keyframes spin {
         to {
@@ -317,59 +366,65 @@
         }
       }
 
-      @media (max-width: 500px) {
+      @media (max-width: 520px) {
         .form-row {
           flex-direction: column;
         }
-        .parts-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
         header {
           flex-direction: column;
-          gap: 10px;
           align-items: flex-start;
+        }
+        .h-left {
+          flex-direction: row;
         }
       }
     </style>
   </head>
   <body>
     <header>
-      <div class="header-title">لوحة تحكم المطور</div>
-      <div class="header-badge">ADMIN PANEL</div>
+      <div class="h-left">
+        <img
+          src="https://i.ibb.co/QjFw6J9Y/image.png"
+          alt="احنا النجاح"
+          class="h-logo"
+          onerror="this.style.display = 'none'"
+        />
+        <div class="h-title">لوحة تحكم المطور</div>
+      </div>
+      <div class="h-badge">ADMIN PANEL</div>
     </header>
 
     <div class="container">
-      <!-- Create Khatma -->
+      <!-- Create -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-header-left">
-            <div class="card-label">إنشاء ختمة</div>
+        <div class="card-hdr">
+          <div class="card-hdr-l">
+            <div class="card-lbl">إنشاء</div>
             <div class="card-title">ختمة جديدة</div>
           </div>
         </div>
         <div class="card-body">
           <div class="hint">
-            أدخل اسم الختمة (مثال: ختمة شهر رمضان الأولى) ثم اضغط إنشاء. سيتم
-            إنشاء 30 جزءاً تلقائياً.
+            أدخل اسم الختمة ثم اضغط إنشاء — سيتم إنشاء 30 جزءاً تلقائياً.
           </div>
           <div class="form-row">
             <input
               type="text"
-              id="new-khatma-name"
-              class="input-styled"
+              id="new-name"
+              class="inp"
               placeholder="اسم الختمة..."
             />
-            <button class="btn btn-primary" onclick="createNewKhatma()">
+            <button class="btn btn-g" onclick="createKhatma()">
               إنشاء الختمة
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Khatmas List -->
-      <div id="admin-khatmas-container">
+      <!-- List -->
+      <div id="admin-list">
         <div class="loader">
-          <div class="loader-ring"></div>
+          <div class="ring"></div>
           <p>جاري التحميل...</p>
         </div>
       </div>
@@ -388,154 +443,221 @@
         serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyD9UQN3j1wh1SCLw9YF0NKDpuY4yHozj5w",
-        authDomain: "khetmeh-abf9c.firebaseapp.com",
-        projectId: "khetmeh-abf9c",
-        storageBucket: "khetmeh-abf9c.firebasestorage.app",
-        messagingSenderId: "130734585859",
-        appId: "1:130734585859:web:ee03faaf80a5d9d57ef636",
-      };
+      const db = getFirestore(
+        initializeApp({
+          apiKey: "AIzaSyD9UQN3j1wh1SCLw9YF0NKDpuY4yHozj5w",
+          authDomain: "khetmeh-abf9c.firebaseapp.com",
+          projectId: "khetmeh-abf9c",
+          storageBucket: "khetmeh-abf9c.firebasestorage.app",
+          messagingSenderId: "130734585859",
+          appId: "1:130734585859:web:ee03faaf80a5d9d57ef636",
+        }),
+      );
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-
-      const juzData = [
-        { name: "الجزء الأول", surah: "الفاتحة" },
-        { name: "الجزء الثاني", surah: "البقرة (186)" },
-        { name: "الجزء الثالث", surah: "البقرة (253)" },
-        { name: "الجزء الرابع", surah: "آل عمران (92)" },
-        { name: "الجزء الخامس", surah: "النساء (24)" },
-        { name: "الجزء السادس", surah: "النساء (148)" },
-        { name: "الجزء السابع", surah: "المائدة (82)" },
-        { name: "الجزء الثامن", surah: "الأنعام (111)" },
-        { name: "الجزء التاسع", surah: "الأعراف (88)" },
-        { name: "الجزء العاشر", surah: "الأنفال (40)" },
-        { name: "الجزء الحادي عشر", surah: "التوبة (93)" },
-        { name: "الجزء الثاني عشر", surah: "هود (6)" },
-        { name: "الجزء الثالث عشر", surah: "يوسف (53)" },
-        { name: "الجزء الرابع عشر", surah: "الحجر" },
-        { name: "الجزء الخامس عشر", surah: "الإسراء" },
-        { name: "الجزء السادس عشر", surah: "الكهف (75)" },
-        { name: "الجزء السابع عشر", surah: "الأنبياء" },
-        { name: "الجزء الثامن عشر", surah: "المؤمنون" },
-        { name: "الجزء التاسع عشر", surah: "الفرقان (21)" },
-        { name: "الجزء العشرون", surah: "النمل (56)" },
-        { name: "الجزء الحادي والعشرون", surah: "العنكبوت (46)" },
-        { name: "الجزء الثاني والعشرون", surah: "الأحزاب (31)" },
-        { name: "الجزء الثالث والعشرون", surah: "يس (28)" },
-        { name: "الجزء الرابع والعشرون", surah: "الزمر (32)" },
-        { name: "الجزء الخامس والعشرون", surah: "فصلت (47)" },
-        { name: "الجزء السادس والعشرون", surah: "الأحقاف" },
-        { name: "الجزء السابع والعشرون", surah: "الذاريات (31)" },
-        { name: "الجزء الثامن والعشرون", surah: "المجادلة" },
-        { name: "الجزء التاسع والعشرون", surah: "الملك" },
-        { name: "الجزء الثلاثون", surah: "النبأ" },
+      const JUZS = [
+        "الجزء الأول",
+        "الجزء الثاني",
+        "الجزء الثالث",
+        "الجزء الرابع",
+        "الجزء الخامس",
+        "الجزء السادس",
+        "الجزء السابع",
+        "الجزء الثامن",
+        "الجزء التاسع",
+        "الجزء العاشر",
+        "الجزء الحادي عشر",
+        "الجزء الثاني عشر",
+        "الجزء الثالث عشر",
+        "الجزء الرابع عشر",
+        "الجزء الخامس عشر",
+        "الجزء السادس عشر",
+        "الجزء السابع عشر",
+        "الجزء الثامن عشر",
+        "الجزء التاسع عشر",
+        "الجزء العشرون",
+        "الجزء الحادي والعشرون",
+        "الجزء الثاني والعشرون",
+        "الجزء الثالث والعشرون",
+        "الجزء الرابع والعشرون",
+        "الجزء الخامس والعشرون",
+        "الجزء السادس والعشرون",
+        "الجزء السابع والعشرون",
+        "الجزء الثامن والعشرون",
+        "الجزء التاسع والعشرون",
+        "الجزء الثلاثون",
       ];
 
-      window.createNewKhatma = async () => {
-        const nameInput = document.getElementById("new-khatma-name");
-        const name = nameInput.value.trim();
+      // store all khatmas data for export
+      let allKhatmas = [];
+
+      window.createKhatma = async () => {
+        const inp = document.getElementById("new-name");
+        const name = inp.value.trim();
         if (!name) return alert("الرجاء إدخال اسم الختمة");
-        const partsObj = {};
-        for (let i = 1; i <= 30; i++) {
-          partsObj[`part_${i}`] = {
+        const parts = {};
+        for (let i = 1; i <= 30; i++)
+          parts[`part_${i}`] = {
             number: i,
             status: "available",
             reservedBy: "",
+            universityId: "",
           };
-        }
         try {
           await addDoc(collection(db, "khatmas"), {
             name,
             createdAt: serverTimestamp(),
-            parts: partsObj,
+            parts,
           });
-          nameInput.value = "";
+          inp.value = "";
         } catch (e) {
           alert("حدث خطأ أثناء الإنشاء");
         }
       };
 
-      onSnapshot(collection(db, "khatmas"), (snapshot) => {
-        const container = document.getElementById("admin-khatmas-container");
-        container.innerHTML = "";
-        if (snapshot.empty) {
-          container.innerHTML = `<div class="loader"><p>لا توجد ختمات بعد.</p></div>`;
+      onSnapshot(collection(db, "khatmas"), (snap) => {
+        const root = document.getElementById("admin-list");
+        root.innerHTML = "";
+        allKhatmas = [];
+        if (snap.empty) {
+          root.innerHTML = `<div class="loader"><p>لا توجد ختمات.</p></div>`;
           return;
         }
+        let list = [];
+        snap.forEach((d) => list.push({ id: d.id, ...d.data() }));
+        list.sort(
+          (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0),
+        );
+        allKhatmas = list;
 
-        let khatmas = [];
-        snapshot.forEach((d) => khatmas.push({ id: d.id, ...d.data() }));
-        khatmas.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
-
-        khatmas.forEach((khatma) => {
-          const parts = Object.values(khatma.parts);
-          const reserved = parts.filter((p) => p.status === "reserved").length;
-          const available = 30 - reserved;
-
-          let partsHtml = "";
+        list.forEach((km) => {
+          const parts = Object.values(km.parts);
+          const res = parts.filter((p) => p.status === "reserved").length;
+          const av = 30 - res;
+          let html = "";
           for (let i = 1; i <= 30; i++) {
-            const part = khatma.parts[`part_${i}`];
-            const juz = juzData[i - 1];
-            const isAvailable = part.status === "available";
-            if (isAvailable) {
-              partsHtml += `
-                <div class="part-admin available">
-                  <div class="part-admin-num">جزء ${i}</div>
-                  <div class="part-admin-name">${juz.name}</div>
-                  <div class="part-admin-status">متاح</div>
-                </div>`;
+            const p = km.parts[`part_${i}`],
+              av2 = p.status === "available";
+            if (av2) {
+              html += `<div class="pa av"><div class="pa-num">جزء ${i}</div><div class="pa-name">${JUZS[i - 1]}</div><div class="pa-status">متاح</div></div>`;
             } else {
-              partsHtml += `
-                <div class="part-admin reserved" onclick="adminResetPart('${khatma.id}', ${i}, '${part.reservedBy}')">
-                  <div class="part-admin-num">جزء ${i}</div>
-                  <div class="part-admin-name">${juz.name}</div>
-                  <div class="reserved-name-admin">${part.reservedBy}</div>
-                  <div class="reset-hint">اضغط لإلغاء الحجز</div>
-                </div>`;
+              const uid = p.universityId
+                ? `<div class="rsv-uid">${p.universityId}</div>`
+                : "";
+              html += `<div class="pa rs" onclick="resetPart('${km.id}',${i},'${p.reservedBy.replace(/'/g, "\\'")}')">
+              <div class="pa-num">جزء ${i}</div><div class="pa-name">${JUZS[i - 1]}</div>
+              <div class="rsv-chip">${p.reservedBy}</div>${uid}
+              <div class="hint-rs">اضغط لإلغاء الحجز</div>
+            </div>`;
             }
           }
-
           const card = document.createElement("div");
           card.className = "card";
           card.innerHTML = `
-            <div class="card-header">
-              <div class="card-header-left">
-                <div class="card-label">ختمة</div>
-                <div class="card-title">${khatma.name}</div>
-              </div>
-              <button class="btn btn-danger" onclick="deleteKhatma('${khatma.id}')">حذف الختمة</button>
+          <div class="card-hdr">
+            <div class="card-hdr-l">
+              <div class="card-lbl">ختمة</div>
+              <div class="card-title">${km.name}</div>
             </div>
-            <div class="stats-row">
-              <div class="stat"><strong>${reserved}</strong> محجوزة</div>
-              <div class="stat-sep">|</div>
-              <div class="stat"><strong>${available}</strong> متاحة</div>
-              <div class="stat-sep">|</div>
-              <div class="stat">من أصل <strong>30</strong></div>
-            </div>
-            <div class="parts-grid">${partsHtml}</div>`;
-          container.appendChild(card);
+            <button class="btn btn-d" onclick="delKhatma('${km.id}')">حذف الختمة</button>
+          </div>
+          <div class="stats-bar">
+            <span class="stat"><b>${res}</b> محجوزة</span><span class="sep">|</span>
+            <span class="stat"><b>${av}</b> متاحة</span><span class="sep">|</span>
+            <span class="stat">من أصل <b>30</b></span>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-xl" onclick="exportExcel('${km.id}')">تصدير Excel</button>
+          </div>
+          <div class="parts-grid">${html}</div>`;
+          root.appendChild(card);
         });
       });
 
-      window.adminResetPart = async (khatmaId, partNumber, userName) => {
-        if (!confirm(`هل تريد إلغاء حجز "${userName}" للجزء ${partNumber}؟`))
-          return;
-        await updateDoc(doc(db, "khatmas", khatmaId), {
-          [`parts.part_${partNumber}.status`]: "available",
-          [`parts.part_${partNumber}.reservedBy`]: "",
+      window.resetPart = async (kid, num, uname) => {
+        if (!confirm(`إلغاء حجز "${uname}" للجزء ${num}؟`)) return;
+        await updateDoc(doc(db, "khatmas", kid), {
+          [`parts.part_${num}.status`]: "available",
+          [`parts.part_${num}.reservedBy`]: "",
+          [`parts.part_${num}.universityId`]: "",
         });
       };
 
-      window.deleteKhatma = async (khatmaId) => {
-        if (
-          !confirm(
-            "تحذير: سيتم حذف الختمة وجميع حجوزاتها بشكل نهائي. هل أنت متأكد؟",
-          )
-        )
+      window.delKhatma = async (kid) => {
+        if (!confirm("سيتم حذف الختمة وجميع حجوزاتها نهائياً. متأكد؟")) return;
+        await deleteDoc(doc(db, "khatmas", kid));
+      };
+
+      // ─── Excel Export ───
+      window.exportExcel = (kid) => {
+        const km = allKhatmas.find((k) => k.id === kid);
+        if (!km) {
+          alert("لم يتم العثور على بيانات الختمة");
           return;
-        await deleteDoc(doc(db, "khatmas", khatmaId));
+        }
+
+        // Build rows
+        const rows = [];
+        // Header row
+        rows.push([
+          "رقم الجزء",
+          "اسم الجزء",
+          "الحالة",
+          "الاسم",
+          "الرقم الجامعي",
+        ]);
+
+        for (let i = 1; i <= 30; i++) {
+          const p = km.parts[`part_${i}`];
+          const isRes = p.status === "reserved";
+          rows.push([
+            i,
+            JUZS[i - 1],
+            isRes ? "محجوز" : "متاح",
+            isRes ? p.reservedBy : "",
+            isRes ? p.universityId || "" : "",
+          ]);
+        }
+
+        // Summary rows
+        const resCount = Object.values(km.parts).filter(
+          (p) => p.status === "reserved",
+        ).length;
+        rows.push([]);
+        rows.push([
+          "إجمالي المحجوز",
+          resCount,
+          "إجمالي المتاح",
+          30 - resCount,
+          "",
+        ]);
+
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+
+        // Column widths
+        ws["!cols"] = [
+          { wch: 12 },
+          { wch: 26 },
+          { wch: 12 },
+          { wch: 20 },
+          { wch: 18 },
+        ];
+
+        // RTL direction hint (for apps that support it)
+        ws["!dir"] = "rtl";
+
+        // Style header row cells bold (basic)
+        ["A1", "B1", "C1", "D1", "E1"].forEach((cell) => {
+          if (ws[cell])
+            ws[cell].s = {
+              font: { bold: true },
+              fill: { fgColor: { rgb: "D4EDDA" } },
+              alignment: { horizontal: "center" },
+            };
+        });
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "الختمة");
+        XLSX.writeFile(wb, `${km.name}.xlsx`);
       };
     </script>
   </body>
