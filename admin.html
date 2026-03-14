@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة الإدارة | نظام الختمات</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #1a5c38;
+        --primary-mid: #2d7a50;
+        --primary-light: #e8f5ee;
+        --primary-pale: #f4fbf7;
+        --accent: #c8a96e;
+        --accent-light: #fdf6ea;
+        --bg: #f5f5f3;
+        --card: #ffffff;
+        --text: #1c1c1e;
+        --text-muted: #8a8a8e;
+        --text-sub: #6b7280;
+        --border: #e8e8e6;
+        --border-light: #f0f0ee;
+        --danger: #c0392b;
+        --danger-light: #fdf1f0;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.07);
+        --radius: 14px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Tajawal", sans-serif;
+        padding-bottom: 60px;
+      }
+
+      /* ── Header ── */
+      header {
+        background: var(--primary);
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+      header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .header-title {
+        font-family: "Amiri", serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      .header-badge {
+        background: rgba(200, 169, 110, 0.2);
+        border: 1px solid rgba(200, 169, 110, 0.4);
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        padding: 5px 12px;
+        border-radius: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 28px 20px;
+      }
+
+      /* ── Card ── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        margin-bottom: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .card-header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .card-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .card-title {
+        font-family: "Amiri", serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .card-body {
+        padding: 24px;
+      }
+
+      /* ── Create form ── */
+      .form-row {
+        display: flex;
+        gap: 10px;
+      }
+      .input-styled {
+        flex: 1;
+        padding: 13px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 500;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .input-styled:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(26, 92, 56, 0.08);
+        background: #fff;
+      }
+      .input-styled::placeholder {
+        color: var(--text-muted);
+      }
+
+      .btn {
+        padding: 13px 22px;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--primary-mid);
+      }
+      .btn-danger {
+        background: var(--danger-light);
+        color: var(--danger);
+        border: 1px solid rgba(192, 57, 43, 0.2);
+      }
+      .btn-danger:hover {
+        background: #fde8e6;
+      }
+
+      /* ── Parts Grid ── */
+      .parts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1px;
+        background: var(--border-light);
+        border-top: 1px solid var(--border-light);
+      }
+
+      .part-admin {
+        background: var(--card);
+        padding: 14px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .part-admin-num {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .part-admin-name {
+        font-family: "Amiri", serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--text-sub);
+        line-height: 1.3;
+      }
+      .part-admin.available .part-admin-name {
+        color: var(--primary);
+      }
+      .part-admin-status {
+        font-size: 0.7rem;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+      .part-admin.available .part-admin-status {
+        color: var(--primary-mid);
+      }
+      .part-admin.reserved {
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .part-admin.reserved:hover {
+        background: #fef9f5;
+      }
+
+      .reserved-name-admin {
+        display: inline-block;
+        background: var(--accent-light);
+        border: 1px solid rgba(200, 169, 110, 0.3);
+        color: #7a5a1e;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 5px;
+        margin-top: 4px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .reset-hint {
+        font-size: 0.65rem;
+        color: var(--danger);
+        margin-top: 3px;
+        opacity: 0.7;
+        font-weight: 500;
+      }
+
+      /* ── Stats row ── */
+      .stats-row {
+        display: flex;
+        gap: 8px;
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--border-light);
+        background: var(--primary-pale);
+      }
+      .stat {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+      .stat strong {
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .stat-sep {
+        color: var(--border);
+      }
+
+      /* ── Hint ── */
+      .hint {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        background: var(--bg);
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      /* loader */
+      .loader {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+      }
+      .loader-ring {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 14px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 500px) {
+        .form-row {
+          flex-direction: column;
+        }
+        .parts-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        header {
+          flex-direction: column;
+          gap: 10px;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-title">لوحة تحكم المطور</div>
+      <div class="header-badge">ADMIN PANEL</div>
+    </header>
+
+    <div class="container">
+      <!-- Create Khatma -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="card-label">إنشاء ختمة</div>
+            <div class="card-title">ختمة جديدة</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="hint">
+            أدخل اسم الختمة (مثال: ختمة شهر رمضان الأولى) ثم اضغط إنشاء. سيتم
+            إنشاء 30 جزءاً تلقائياً.
+          </div>
+          <div class="form-row">
+            <input
+              type="text"
+              id="new-khatma-name"
+              class="input-styled"
+              placeholder="اسم الختمة..."
+            />
+            <button class="btn btn-primary" onclick="createNewKhatma()">
+              إنشاء الختمة
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khatmas List -->
+      <div id="admin-khatmas-container">
+        <div class="loader">
+          <div class="loader-ring"></div>
+          <p>جاري التحميل...</p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        onSnapshot,
+        doc,
+        updateDoc,
+        deleteDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD9UQN3j1wh1SCLw9YF0NKDpuY4yHozj5w",
+        authDomain: "khetmeh-abf9c.firebaseapp.com",
+        projectId: "khetmeh-abf9c",
+        storageBucket: "khetmeh-abf9c.firebasestorage.app",
+        messagingSenderId: "130734585859",
+        appId: "1:130734585859:web:ee03faaf80a5d9d57ef636",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const juzData = [
+        { name: "الجزء الأول", surah: "الفاتحة" },
+        { name: "الجزء الثاني", surah: "البقرة (186)" },
+        { name: "الجزء الثالث", surah: "البقرة (253)" },
+        { name: "الجزء الرابع", surah: "آل عمران (92)" },
+        { name: "الجزء الخامس", surah: "النساء (24)" },
+        { name: "الجزء السادس", surah: "النساء (148)" },
+        { name: "الجزء السابع", surah: "المائدة (82)" },
+        { name: "الجزء الثامن", surah: "الأنعام (111)" },
+        { name: "الجزء التاسع", surah: "الأعراف (88)" },
+        { name: "الجزء العاشر", surah: "الأنفال (40)" },
+        { name: "الجزء الحادي عشر", surah: "التوبة (93)" },
+        { name: "الجزء الثاني عشر", surah: "هود (6)" },
+        { name: "الجزء الثالث عشر", surah: "يوسف (53)" },
+        { name: "الجزء الرابع عشر", surah: "الحجر" },
+        { name: "الجزء الخامس عشر", surah: "الإسراء" },
+        { name: "الجزء السادس عشر", surah: "الكهف (75)" },
+        { name: "الجزء السابع عشر", surah: "الأنبياء" },
+        { name: "الجزء الثامن عشر", surah: "المؤمنون" },
+        { name: "الجزء التاسع عشر", surah: "الفرقان (21)" },
+        { name: "الجزء العشرون", surah: "النمل (56)" },
+        { name: "الجزء الحادي والعشرون", surah: "العنكبوت (46)" },
+        { name: "الجزء الثاني والعشرون", surah: "الأحزاب (31)" },
+        { name: "الجزء الثالث والعشرون", surah: "يس (28)" },
+        { name: "الجزء الرابع والعشرون", surah: "الزمر (32)" },
+        { name: "الجزء الخامس والعشرون", surah: "فصلت (47)" },
+        { name: "الجزء السادس والعشرون", surah: "الأحقاف" },
+        { name: "الجزء السابع والعشرون", surah: "الذاريات (31)" },
+        { name: "الجزء الثامن والعشرون", surah: "المجادلة" },
+        { name: "الجزء التاسع والعشرون", surah: "الملك" },
+        { name: "الجزء الثلاثون", surah: "النبأ" },
+      ];
+
+      window.createNewKhatma = async () => {
+        const nameInput = document.getElementById("new-khatma-name");
+        const name = nameInput.value.trim();
+        if (!name) return alert("الرجاء إدخال اسم الختمة");
+        const partsObj = {};
+        for (let i = 1; i <= 30; i++) {
+          partsObj[`part_${i}`] = {
+            number: i,
+            status: "available",
+            reservedBy: "",
+          };
+        }
+        try {
+          await addDoc(collection(db, "khatmas"), {
+            name,
+            createdAt: serverTimestamp(),
+            parts: partsObj,
+          });
+          nameInput.value = "";
+        } catch (e) {
+          alert("حدث خطأ أثناء الإنشاء");
+        }
+      };
+
+      onSnapshot(collection(db, "khatmas"), (snapshot) => {
+        const container = document.getElementById("admin-khatmas-container");
+        container.innerHTML = "";
+        if (snapshot.empty) {
+          container.innerHTML = `<div class="loader"><p>لا توجد ختمات بعد.</p></div>`;
+          return;
+        }
+
+        let khatmas = [];
+        snapshot.forEach((d) => khatmas.push({ id: d.id, ...d.data() }));
+        khatmas.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
+
+        khatmas.forEach((khatma) => {
+          const parts = Object.values(khatma.parts);
+          const reserved = parts.filter((p) => p.status === "reserved").length;
+          const available = 30 - reserved;
+
+          let partsHtml = "";
+          for (let i = 1; i <= 30; i++) {
+            const part = khatma.parts[`part_${i}`];
+            const juz = juzData[i - 1];
+            const isAvailable = part.status === "available";
+            if (isAvailable) {
+              partsHtml += `
+                <div class="part-admin available">
+                  <div class="part-admin-num">جزء ${i}</div>
+                  <div class="part-admin-name">${juz.name}</div>
+                  <div class="part-admin-status">متاح</div>
+                </div>`;
+            } else {
+              partsHtml += `
+                <div class="part-admin reserved" onclick="adminResetPart('${khatma.id}', ${i}, '${part.reservedBy}')">
+                  <div class="part-admin-num">جزء ${i}</div>
+                  <div class="part-admin-name">${juz.name}</div>
+                  <div class="reserved-name-admin">${part.reservedBy}</div>
+                  <div class="reset-hint">اضغط لإلغاء الحجز</div>
+                </div>`;
+            }
+          }
+
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-label">ختمة</div>
+                <div class="card-title">${khatma.name}</div>
+              </div>
+              <button class="btn btn-danger" onclick="deleteKhatma('${khatma.id}')">حذف الختمة</button>
+            </div>
+            <div class="stats-row">
+              <div class="stat"><strong>${reserved}</strong> محجوزة</div>
+              <div class="stat-sep">|</div>
+              <div class="stat"><strong>${available}</strong> متاحة</div>
+              <div class="stat-sep">|</div>
+              <div class="stat">من أصل <strong>30</strong></div>
+            </div>
+            <div class="parts-grid">${partsHtml}</div>`;
+          container.appendChild(card);
+        });
+      });
+
+      window.adminResetPart = async (khatmaId, partNumber, userName) => {
+        if (!confirm(`هل تريد إلغاء حجز "${userName}" للجزء ${partNumber}؟`))
+          return;
+        await updateDoc(doc(db, "khatmas", khatmaId), {
+          [`parts.part_${partNumber}.status`]: "available",
+          [`parts.part_${partNumber}.reservedBy`]: "",
+        });
+      };
+
+      window.deleteKhatma = async (khatmaId) => {
+        if (
+          !confirm(
+            "تحذير: سيتم حذف الختمة وجميع حجوزاتها بشكل نهائي. هل أنت متأكد؟",
+          )
+        )
+          return;
+        await deleteDoc(doc(db, "khatmas", khatmaId));
+      };
+    </script>
+  </body>
+</html>

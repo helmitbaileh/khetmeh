@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>مشروع الختمات القرآنية</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #1a5c38;
+        --primary-mid: #2d7a50;
+        --primary-light: #e8f5ee;
+        --primary-pale: #f4fbf7;
+        --accent: #c8a96e;
+        --accent-light: #fdf6ea;
+        --bg: #fafaf8;
+        --card: #ffffff;
+        --text: #1c1c1e;
+        --text-muted: #8a8a8e;
+        --text-sub: #6b7280;
+        --border: #e8e8e6;
+        --border-light: #f0f0ee;
+        --reserved-bg: #fdf8f0;
+        --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.12);
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Tajawal", sans-serif;
+        min-height: 100vh;
+        padding-bottom: 60px;
+        overflow-x: hidden;
+      }
+
+      /* ── Header ── */
+      header {
+        background: var(--primary);
+        padding: 50px 24px 36px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 20% 50%,
+            rgba(200, 169, 110, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 20%,
+            rgba(255, 255, 255, 0.06) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+      }
+      /* Decorative Arabic pattern lines */
+      header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .header-inner {
+        position: relative;
+        z-index: 1;
+      }
+      .header-label {
+        display: inline-block;
+        background: rgba(200, 169, 110, 0.2);
+        border: 1px solid rgba(200, 169, 110, 0.4);
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 30px;
+        margin-bottom: 14px;
+      }
+      header h1 {
+        font-family: "Amiri", serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+      header p {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.9rem;
+        font-weight: 300;
+      }
+
+      /* ── Container ── */
+      .container {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 28px 16px;
+      }
+
+      /* ── Khatma Card ── */
+      .khatma-card {
+        background: var(--card);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        margin-bottom: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .khatma-header {
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .khatma-name {
+        font-family: "Amiri", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .khatma-progress {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        background: var(--primary-pale);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        border: 1px solid var(--primary-light);
+      }
+      .khatma-progress span {
+        color: var(--primary-mid);
+        font-weight: 700;
+      }
+
+      /* ── Parts Grid ── */
+      .parts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        background: var(--border-light);
+      }
+
+      .part-item {
+        background: var(--card);
+        padding: 16px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        position: relative;
+        transition: background 0.15s ease;
+      }
+      .part-item.available {
+        cursor: pointer;
+      }
+      .part-item.available:hover {
+        background: var(--primary-pale);
+      }
+      .part-item.available:active {
+        background: var(--primary-light);
+      }
+
+      .part-number {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .part-item.available .part-number {
+        color: var(--primary-mid);
+      }
+
+      .part-name {
+        font-family: "Amiri", serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+      }
+
+      .part-surah {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .part-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 4px;
+      }
+
+      /* Available state CTA */
+      .part-cta {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--primary);
+        background: var(--primary-light);
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.3px;
+      }
+
+      /* Reserved state */
+      .part-item.reserved {
+        background: var(--reserved-bg);
+      }
+      .part-item.reserved .part-name {
+        color: var(--text-sub);
+      }
+      .reserved-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--accent-light);
+        border: 1px solid rgba(200, 169, 110, 0.3);
+        color: #8a6a2a;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .reserved-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        flex-shrink: 0;
+      }
+
+      /* Read link */
+      .read-link {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        border: 1px solid var(--border);
+        padding: 3px 8px;
+        border-radius: 5px;
+        transition: all 0.15s;
+        font-weight: 500;
+      }
+      .read-link:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-pale);
+      }
+
+      /* ── Loader ── */
+      .loader {
+        text-align: center;
+        padding: 80px 20px;
+      }
+      .loader-ring {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 16px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loader p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      /* ── Bottom Sheet ── */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(6px);
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease;
+      }
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .sheet {
+        position: absolute;
+        bottom: -100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-radius: 24px 24px 0 0;
+        padding: 0 0 env(safe-area-inset-bottom, 24px);
+        box-shadow: var(--shadow-lg);
+        transition: bottom 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .overlay.active .sheet {
+        bottom: 0;
+      }
+
+      .sheet-handle {
+        width: 40px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 4px;
+        margin: 14px auto 0;
+      }
+
+      .sheet-body {
+        padding: 24px 24px 32px;
+        text-align: center;
+      }
+
+      .sheet-icon {
+        width: 56px;
+        height: 56px;
+        background: var(--primary-light);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        font-size: 1.5rem;
+        color: var(--primary);
+      }
+
+      .sheet-title {
+        font-family: "Amiri", serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .sheet-sub {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+      .sheet-sub strong {
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .input-wrap {
+        position: relative;
+        margin-bottom: 16px;
+      }
+      .input-styled {
+        width: 100%;
+        padding: 15px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 1rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 500;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        text-align: center;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .input-styled::placeholder {
+        color: var(--text-muted);
+      }
+      .input-styled:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(26, 92, 56, 0.08);
+        background: #fff;
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 15px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 1rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        box-shadow: 0 4px 16px rgba(26, 92, 56, 0.25);
+      }
+      .btn-primary:hover {
+        background: var(--primary-mid);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+
+      .btn-ghost {
+        width: 100%;
+        padding: 12px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      /* Success sheet */
+      .success-icon {
+        width: 72px;
+        height: 72px;
+        background: var(--primary-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2rem;
+        color: var(--primary);
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--text-muted);
+      }
+      .empty-state p {
+        font-size: 0.95rem;
+        margin-top: 12px;
+      }
+
+      @media (min-width: 480px) {
+        .parts-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="header-label">QURAN KHATMA PROJECT</div>
+        <h1>مشروع الختمات القرآنية</h1>
+        <p>تنظيم وتوزيع الأجزاء القرآنية بين المشاركين</p>
+      </div>
+    </header>
+
+    <div class="container" id="khatmas-container">
+      <div class="loader">
+        <div class="loader-ring"></div>
+        <p>جاري تحميل الختمات...</p>
+      </div>
+    </div>
+
+    <!-- Reserve Sheet -->
+    <div
+      class="overlay"
+      id="reserve-overlay"
+      onclick="closeSheet(event, 'reserve-overlay')"
+    >
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+        <div class="sheet-body">
+          <div class="sheet-icon">&#x1F4D6;</div>
+          <div class="sheet-title">حجز الجزء</div>
+          <p class="sheet-sub">
+            أنت على وشك حجز <strong id="modal-part-name"></strong><br />أدخل
+            اسمك الكريم للتأكيد
+          </p>
+          <div class="input-wrap">
+            <input
+              type="text"
+              id="reserver-name"
+              class="input-styled"
+              placeholder="اسمك الكريم..."
+              autocomplete="name"
+            />
+          </div>
+          <button class="btn-primary" onclick="confirmReservation()">
+            تأكيد الحجز
+          </button>
+          <button class="btn-ghost" onclick="closeModal('reserve-overlay')">
+            إلغاء
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thanks Sheet -->
+    <div
+      class="overlay"
+      id="thanks-overlay"
+      onclick="closeSheet(event, 'thanks-overlay')"
+    >
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="sheet-handle"></div>
+        <div class="sheet-body">
+          <div class="success-icon">✓</div>
+          <div class="sheet-title">تم الحجز بنجاح</div>
+          <p class="sheet-sub" style="margin-bottom: 28px">
+            تقبل الله طاعتكم وجعلها في ميزان حسناتكم،<br />ونسأل الله أن يجعله
+            شفيعاً لكم يوم القيامة.
+          </p>
+          <button class="btn-primary" onclick="closeModal('thanks-overlay')">
+            إغلاق
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        onSnapshot,
+        doc,
+        updateDoc,
+      } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD9UQN3j1wh1SCLw9YF0NKDpuY4yHozj5w",
+        authDomain: "khetmeh-abf9c.firebaseapp.com",
+        projectId: "khetmeh-abf9c",
+        storageBucket: "khetmeh-abf9c.firebasestorage.app",
+        messagingSenderId: "130734585859",
+        appId: "1:130734585859:web:ee03faaf80a5d9d57ef636",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Each juz: name + starting surah
+      const juzData = [
+        { name: "الجزء الأول", surah: "يبدأ بسورة الفاتحة" },
+        { name: "الجزء الثاني", surah: "يبدأ بسورة البقرة (186)" },
+        { name: "الجزء الثالث", surah: "يبدأ بسورة البقرة (253)" },
+        { name: "الجزء الرابع", surah: "يبدأ بسورة آل عمران (92)" },
+        { name: "الجزء الخامس", surah: "يبدأ بسورة النساء (24)" },
+        { name: "الجزء السادس", surah: "يبدأ بسورة النساء (148)" },
+        { name: "الجزء السابع", surah: "يبدأ بسورة المائدة (82)" },
+        { name: "الجزء الثامن", surah: "يبدأ بسورة الأنعام (111)" },
+        { name: "الجزء التاسع", surah: "يبدأ بسورة الأعراف (88)" },
+        { name: "الجزء العاشر", surah: "يبدأ بسورة الأنفال (40)" },
+        { name: "الجزء الحادي عشر", surah: "يبدأ بسورة التوبة (93)" },
+        { name: "الجزء الثاني عشر", surah: "يبدأ بسورة هود (6)" },
+        { name: "الجزء الثالث عشر", surah: "يبدأ بسورة يوسف (53)" },
+        { name: "الجزء الرابع عشر", surah: "يبدأ بسورة الحجر (1)" },
+        { name: "الجزء الخامس عشر", surah: "يبدأ بسورة الإسراء (1)" },
+        { name: "الجزء السادس عشر", surah: "يبدأ بسورة الكهف (75)" },
+        { name: "الجزء السابع عشر", surah: "يبدأ بسورة الأنبياء (1)" },
+        { name: "الجزء الثامن عشر", surah: "يبدأ بسورة المؤمنون (1)" },
+        { name: "الجزء التاسع عشر", surah: "يبدأ بسورة الفرقان (21)" },
+        { name: "الجزء العشرون", surah: "يبدأ بسورة النمل (56)" },
+        { name: "الجزء الحادي والعشرون", surah: "يبدأ بسورة العنكبوت (46)" },
+        { name: "الجزء الثاني والعشرون", surah: "يبدأ بسورة الأحزاب (31)" },
+        { name: "الجزء الثالث والعشرون", surah: "يبدأ بسورة يس (28)" },
+        { name: "الجزء الرابع والعشرون", surah: "يبدأ بسورة الزمر (32)" },
+        { name: "الجزء الخامس والعشرون", surah: "يبدأ بسورة فصلت (47)" },
+        { name: "الجزء السادس والعشرون", surah: "يبدأ بسورة الأحقاف (1)" },
+        { name: "الجزء السابع والعشرون", surah: "يبدأ بسورة الذاريات (31)" },
+        { name: "الجزء الثامن والعشرون", surah: "يبدأ بسورة المجادلة (1)" },
+        { name: "الجزء التاسع والعشرون", surah: "يبدأ بسورة الملك (1)" },
+        { name: "الجزء الثلاثون", surah: "يبدأ بسورة النبأ (1)" },
+      ];
+
+      let selectedKhatmaId = null;
+      let selectedPartNumber = null;
+
+      onSnapshot(collection(db, "khatmas"), (snapshot) => {
+        const container = document.getElementById("khatmas-container");
+        container.innerHTML = "";
+
+        if (snapshot.empty) {
+          container.innerHTML = `<div class="empty-state"><p>لا توجد ختمات متاحة حالياً</p></div>`;
+          return;
+        }
+
+        let khatmas = [];
+        snapshot.forEach((d) => khatmas.push({ id: d.id, ...d.data() }));
+        khatmas.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
+
+        khatmas.forEach((khatma) => {
+          const reserved = Object.values(khatma.parts).filter(
+            (p) => p.status === "reserved",
+          ).length;
+          const total = 30;
+
+          const card = document.createElement("div");
+          card.className = "khatma-card";
+
+          let partsHtml = "";
+          for (let i = 1; i <= 30; i++) {
+            const part = khatma.parts[`part_${i}`];
+            const juz = juzData[i - 1];
+            const isAvailable = part.status === "available";
+            const readLink = `https://quran.com/ar/juz/${i}`;
+
+            if (isAvailable) {
+              partsHtml += `
+                <div class="part-item available" onclick="openReserveModal('${khatma.id}', ${i}, '${juz.name}')">
+                  <div class="part-number">جزء ${i}</div>
+                  <div class="part-name">${juz.name}</div>
+                  <div class="part-surah">${juz.surah}</div>
+                  <div class="part-footer">
+                    <span class="part-cta">احجز</span>
+                    <a href="${readLink}" target="_blank" onclick="event.stopPropagation()" class="read-link">قراءة</a>
+                  </div>
+                </div>`;
+            } else {
+              partsHtml += `
+                <div class="part-item reserved">
+                  <div class="part-number">جزء ${i}</div>
+                  <div class="part-name">${juz.name}</div>
+                  <div class="part-surah">${juz.surah}</div>
+                  <div class="part-footer">
+                    <span class="reserved-badge"><span class="reserved-dot"></span>${part.reservedBy}</span>
+                    <a href="${readLink}" target="_blank" class="read-link">قراءة</a>
+                  </div>
+                </div>`;
+            }
+          }
+
+          card.innerHTML = `
+            <div class="khatma-header">
+              <div class="khatma-name">${khatma.name}</div>
+              <div class="khatma-progress"><span>${reserved}</span> / ${total} محجوز</div>
+            </div>
+            <div class="parts-grid">${partsHtml}</div>`;
+          container.appendChild(card);
+        });
+      });
+
+      window.openReserveModal = (khatmaId, partNumber, partName) => {
+        selectedKhatmaId = khatmaId;
+        selectedPartNumber = partNumber;
+        document.getElementById("modal-part-name").textContent = partName;
+        document.getElementById("reserver-name").value = "";
+        document.getElementById("reserve-overlay").classList.add("active");
+        setTimeout(() => document.getElementById("reserver-name").focus(), 350);
+      };
+
+      window.closeModal = (id) => {
+        document.getElementById(id).classList.remove("active");
+        if (id === "reserve-overlay") {
+          selectedKhatmaId = null;
+          selectedPartNumber = null;
+        }
+      };
+
+      window.closeSheet = (e, id) => {
+        if (e.target.id === id) closeModal(id);
+      };
+
+      window.confirmReservation = async () => {
+        const name = document.getElementById("reserver-name").value.trim();
+        if (!name) return alert("الرجاء كتابة اسمك لتأكيد الحجز");
+
+        const btn = document.querySelector("#reserve-overlay .btn-primary");
+        btn.textContent = "جاري الحجز...";
+        btn.disabled = true;
+
+        try {
+          await updateDoc(doc(db, "khatmas", selectedKhatmaId), {
+            [`parts.part_${selectedPartNumber}.status`]: "reserved",
+            [`parts.part_${selectedPartNumber}.reservedBy`]: name,
+          });
+          closeModal("reserve-overlay");
+          setTimeout(
+            () =>
+              document.getElementById("thanks-overlay").classList.add("active"),
+            300,
+          );
+        } catch (err) {
+          alert("حدث خطأ في الاتصال، الرجاء المحاولة مرة أخرى.");
+        } finally {
+          btn.textContent = "تأكيد الحجز";
+          btn.disabled = false;
+        }
+      };
+    </script>
+  </body>
+</html>
