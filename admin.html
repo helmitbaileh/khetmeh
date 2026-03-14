@@ -2,35 +2,41 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>لوحة الإدارة | نظام الختمات</title>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>مشروع الختمات القرآنية</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
-    <!-- SheetJS for Excel export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
       :root {
-        --green: #1e6b42;
-        --green-dark: #145230;
-        --green-mid: #2a8a57;
-        --green-soft: #eaf6f0;
-        --green-pale: #f5fbf7;
+        --g: #1e6b42;
+        --gd: #145230;
+        --gm: #2a8a57;
+        --gs: #eaf6f0;
+        --gp: #f5fbf7;
         --gold: #a07820;
-        --gold-soft: #fdf5e4;
-        --gold-border: rgba(160, 120, 32, 0.22);
+        --gos: #fdf5e4;
+        --gob: rgba(160, 120, 32, 0.22);
+        --blue: #1a4fc4;
+        --bs: #eef3fd;
+        --teal: #0e7490;
+        --ts: #e0f7fa;
+        --red: #b83232;
+        --rs: #fdf1f0;
         --bg: #f6f6f4;
         --card: #fff;
-        --text: #181a18;
-        --muted: #787b79;
-        --sub: #a3a6a4;
-        --border: #e3e5e3;
-        --border-lt: #eceeed;
-        --danger: #b83232;
-        --danger-light: #fdf1f0;
-        --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.07);
-        --r: 13px;
+        --tx: #181a18;
+        --mu: #787b79;
+        --su: #a3a6a4;
+        --br: #e3e5e3;
+        --brl: #eceeed;
+        --res-bg: #fdfaf3;
+        --shsm: 0 2px 10px rgba(0, 0, 0, 0.07);
+        --shlg: 0 18px 48px rgba(0, 0, 0, 0.14);
       }
       *,
       *::before,
@@ -38,28 +44,40 @@
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+        -webkit-tap-highlight-color: transparent;
       }
       body {
         background: var(--bg);
-        color: var(--text);
+        color: var(--tx);
         font-family: "Tajawal", sans-serif;
-        padding-bottom: 60px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding-bottom: 48px;
       }
 
-      /* HEADER */
       header {
-        background: linear-gradient(
-          155deg,
-          var(--green-dark) 0%,
-          var(--green) 100%
-        );
-        padding: 24px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
+        background: linear-gradient(155deg, var(--gd) 0%, var(--g) 100%);
+        padding: 30px 24px 26px;
+        text-align: center;
         position: relative;
         overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 15% 65%,
+            rgba(160, 120, 32, 0.16) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 85% 15%,
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
       }
       header::after {
         content: "";
@@ -76,370 +94,889 @@
           transparent
         );
       }
-      .h-left {
+      .h-inner {
+        position: relative;
+        z-index: 1;
+      }
+      .h-logo-wrap {
+        margin-bottom: 11px;
         display: flex;
-        align-items: center;
-        gap: 14px;
+        justify-content: center;
       }
       .h-logo {
-        height: 44px;
+        height: 52px;
         width: auto;
-        border-radius: 9px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-        padding: 2px;
-        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+        padding: 3px;
+        background: rgba(255, 255, 255, 0.09);
       }
-      .h-title {
+      header h1 {
         font-family: "Amiri", serif;
-        font-size: 1.3rem;
+        font-size: 1.75rem;
         font-weight: 700;
         color: #fff;
+        margin-bottom: 4px;
+        line-height: 1.3;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
       }
-      .h-badge {
-        background: rgba(160, 120, 32, 0.2);
-        border: 1px solid rgba(160, 120, 32, 0.38);
-        color: #d4a830;
-        font-size: 0.68rem;
+      header p {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.84rem;
+        font-weight: 300;
+      }
+
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 20px 13px;
+      }
+
+      .my-banner {
+        background: linear-gradient(135deg, var(--gs) 0%, #d8f0e4 100%);
+        border: 1.5px solid #96ccb0;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        box-shadow: 0 2px 8px rgba(30, 107, 66, 0.1);
+      }
+      .mb-left {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .mb-label {
+        font-size: 0.64rem;
         font-weight: 700;
-        letter-spacing: 1.3px;
-        padding: 4px 11px;
-        border-radius: 18px;
+        color: var(--gm);
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
+      }
+      .mb-juz {
+        font-family: "Amiri", serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--gd);
+      }
+      .mb-sub {
+        font-size: 0.72rem;
+        color: var(--mu);
+        margin-top: 1px;
+      }
+      .mb-done-chip {
+        display: inline-block;
+        background: #3fa05e;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-top: 4px;
+      }
+      .mb-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin-top: 2px;
+      }
+      .btn-banner {
+        padding: 8px 13px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.12s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
         white-space: nowrap;
       }
-
-      /* CONTAINER */
-      .container {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 24px 18px;
+      .bb-read {
+        background: var(--blue);
+        color: #fff;
+      }
+      .bb-read:hover {
+        background: #1d5ad9;
+      }
+      .bb-done {
+        background: var(--g);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(30, 107, 66, 0.25);
+      }
+      .bb-done:hover {
+        background: var(--gm);
+      }
+      .bb-done.completed {
+        background: var(--gs);
+        color: var(--gd);
+        border: 1.5px solid #96ccb0;
+        box-shadow: none;
+        cursor: default;
+      }
+      .bb-cancel {
+        background: var(--rs);
+        color: var(--red);
+        border: 1px solid rgba(184, 50, 50, 0.18);
+      }
+      .bb-cancel:hover {
+        background: #fde4e4;
       }
 
-      /* CARD */
-      .card {
+      .khatma-card {
         background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        margin-bottom: 22px;
+        border-radius: 17px;
+        border: 1px solid var(--br);
+        margin-bottom: 20px;
         overflow: hidden;
-        box-shadow: var(--shadow-sm);
+        box-shadow: var(--shsm);
       }
-      .card-hdr {
-        padding: 17px 20px 14px;
-        border-bottom: 1px solid var(--border-lt);
+      .khatma-hdr {
+        padding: 15px 18px 12px;
+        border-bottom: 1px solid var(--brl);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
+        gap: 10px;
       }
-      .card-hdr-l {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-      .card-lbl {
-        font-size: 0.62rem;
-        font-weight: 700;
-        letter-spacing: 1.4px;
-        color: var(--sub);
-        text-transform: uppercase;
-      }
-      .card-title {
+      .khatma-name {
         font-family: "Amiri", serif;
         font-size: 1.18rem;
         font-weight: 700;
-        color: var(--green);
+        color: var(--g);
       }
-      .card-body {
-        padding: 20px;
+      .khatma-badge {
+        font-size: 0.71rem;
+        color: var(--gm);
+        background: var(--gs);
+        border: 1px solid #bee0cc;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .khatma-badge b {
+        color: var(--gd);
       }
 
-      /* STATS */
-      .stats-bar {
+      .prog-wrap {
+        padding: 12px 18px 14px;
+        border-bottom: 1px solid var(--brl);
+      }
+      .prog-labels {
         display: flex;
-        gap: 6px;
-        padding: 13px 19px;
-        background: var(--green-pale);
-        border-bottom: 1px solid var(--border-lt);
-        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 7px;
       }
-      .stat {
-        font-size: 0.78rem;
-        color: var(--muted);
-        font-weight: 500;
+      .prog-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--mu);
+        letter-spacing: 0.5px;
       }
-      .stat b {
-        color: var(--green-dark);
+      .prog-nums {
+        display: flex;
+        gap: 12px;
+      }
+      .prog-num {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.68rem;
         font-weight: 700;
       }
-      .sep {
-        color: var(--border);
+      .prog-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .pd-booked {
+        background: #7cc4a0;
+      }
+      .pd-done {
+        background: var(--g);
+      }
+      .pd-avail {
+        background: var(--brl);
+      }
+      .prog-track {
+        height: 8px;
+        background: var(--brl);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+      }
+      .prog-fill {
+        height: 100%;
+        border-radius: 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .pf-booked {
+        background: linear-gradient(90deg, #7cc4a0, #a8d8bc);
+        z-index: 1;
+      }
+      .pf-done {
+        background: linear-gradient(90deg, var(--gd), var(--g));
+        z-index: 2;
       }
 
-      /* ACTIONS ROW */
-      .actions-row {
-        display: flex;
-        gap: 8px;
-        padding: 12px 18px;
-        border-bottom: 1px solid var(--border-lt);
-        flex-wrap: wrap;
+      .prog-milestones {
+        position: relative;
+        height: 0;
+      }
+      .prog-mark {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 1px;
+        z-index: 3;
+        transform: translateX(50%);
       }
 
-      /* GRID */
       .parts-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1px;
-        background: var(--border-lt);
+        background: var(--brl);
       }
-      .pa {
+      @media (min-width: 480px) {
+        .parts-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .pi {
         background: var(--card);
-        padding: 12px 11px;
+        padding: 13px 12px;
         display: flex;
         flex-direction: column;
         gap: 2px;
-      }
-      .pa.rs {
-        cursor: pointer;
         transition: background 0.12s;
+        position: relative;
       }
-      .pa.rs:hover {
-        background: #fff8f3;
+      .pi.av {
+        cursor: pointer;
       }
-      .pa-num {
+      .pi.av:hover {
+        background: var(--gp);
+      }
+      .pi.av:active {
+        background: var(--gs);
+      }
+      .pi.rs {
+        background: var(--res-bg);
+      }
+
+      .pi.mine {
+        background: #edf8f2;
+        border-right: 3px solid var(--g);
+        cursor: pointer;
+      }
+      .pi.mine:hover {
+        background: #e0f3ea;
+      }
+      .pi.mine.done {
+        background: #f4fbf7;
+        border-right-color: #3fa05e;
+      }
+
+      .p-num {
         font-size: 0.58rem;
         font-weight: 700;
         letter-spacing: 1px;
-        color: var(--sub);
+        color: var(--su);
       }
-      .pa.av .pa-num {
-        color: var(--green-mid);
+      .pi.av .p-num {
+        color: var(--gm);
       }
-      .pa-name {
+      .pi.mine .p-num {
+        color: var(--g);
+      }
+      .p-name {
         font-family: "Amiri", serif;
-        font-size: 0.9rem;
+        font-size: 0.96rem;
         font-weight: 700;
-        color: var(--muted);
+        color: var(--tx);
         line-height: 1.22;
       }
-      .pa.av .pa-name {
-        color: var(--green);
+      .pi.rs .p-name {
+        color: var(--mu);
       }
-      .pa-status {
-        font-size: 0.67rem;
-        color: var(--green-mid);
-        font-weight: 500;
-        margin-top: 1px;
-      }
-      .rsv-chip {
-        display: inline-block;
-        background: var(--gold-soft);
-        border: 1px solid var(--gold-border);
-        color: var(--gold);
-        font-size: 0.67rem;
-        font-weight: 700;
-        padding: 2px 7px;
-        border-radius: 4px;
-        margin-top: 3px;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .rsv-uid {
-        font-size: 0.63rem;
-        color: var(--muted);
-        margin-top: 1px;
-        direction: ltr;
-        text-align: right;
-      }
-      .hint-rs {
-        font-size: 0.6rem;
-        color: var(--danger);
-        margin-top: 3px;
-        font-weight: 500;
-        opacity: 0.75;
+      .p-surah {
+        font-size: 0.68rem;
+        color: var(--su);
       }
 
-      /* FORM */
-      .hint {
-        font-size: 0.78rem;
-        color: var(--muted);
-        background: var(--bg);
-        padding: 9px 14px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        margin-bottom: 16px;
-        line-height: 1.6;
-      }
-      .form-row {
+      .p-row {
         display: flex;
-        gap: 9px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 6px;
+        gap: 4px;
         flex-wrap: wrap;
       }
-      .inp {
-        flex: 1;
-        min-width: 180px;
-        padding: 12px 14px;
-        border: 1.5px solid var(--border);
-        border-radius: 9px;
-        font-size: 0.92rem;
-        font-family: "Tajawal", sans-serif;
-        font-weight: 500;
-        color: var(--text);
-        background: var(--bg);
-        outline: none;
-        transition:
-          border-color 0.17s,
-          box-shadow 0.17s;
-      }
-      .inp:focus {
-        border-color: var(--green);
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(30, 107, 66, 0.09);
-      }
-      .inp::placeholder {
-        color: var(--sub);
-      }
-
-      /* BTNS */
-      .btn {
-        padding: 11px 18px;
-        border: none;
-        border-radius: 9px;
-        font-size: 0.86rem;
-        font-family: "Tajawal", sans-serif;
+      .tag {
+        font-size: 0.63rem;
         font-weight: 700;
-        cursor: pointer;
-        transition:
-          opacity 0.12s,
-          transform 0.08s;
+        padding: 2px 8px;
+        border-radius: 4px;
         white-space: nowrap;
       }
-      .btn:active {
-        transform: scale(0.97);
-      }
-      .btn-g {
-        background: var(--green);
-        color: #fff;
-        box-shadow: 0 3px 12px rgba(30, 107, 66, 0.22);
-      }
-      .btn-g:hover {
-        background: var(--green-mid);
-      }
-      .btn-d {
-        background: var(--danger-light);
-        color: var(--danger);
-        border: 1px solid rgba(184, 50, 50, 0.18);
-      }
-      .btn-d:hover {
-        background: #fde4e4;
-      }
-      .btn-xl {
-        background: var(--green-soft);
-        color: var(--green-dark);
+      .tag-cta {
+        color: var(--gd);
+        background: var(--gs);
         border: 1px solid #b4d9c4;
       }
-      .btn-xl:hover {
-        background: #d0edde;
+      .tag-mine {
+        color: var(--gd);
+        background: #d6f0e3;
+        border: 1px solid #96ccb0;
+      }
+      .tag-done {
+        color: #fff;
+        background: #3fa05e;
+        border: 1px solid #2d8a4e;
+      }
+      .tag-rs {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--gold);
+        background: var(--gos);
+        border: 1px solid var(--gob);
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--gold);
+        flex-shrink: 0;
+      }
+      .rd {
+        font-size: 0.62rem;
+        color: var(--mu);
+        text-decoration: none;
+        border: 1px solid var(--br);
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: all 0.12s;
+        white-space: nowrap;
+      }
+      .rd:hover {
+        border-color: var(--gm);
+        color: var(--g);
       }
 
-      /* LOADER */
       .loader {
         text-align: center;
-        padding: 60px 20px;
-        color: var(--muted);
+        padding: 70px 20px;
       }
       .ring {
-        width: 34px;
-        height: 34px;
-        border: 3px solid var(--border);
-        border-top-color: var(--green);
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--br);
+        border-top-color: var(--g);
         border-radius: 50%;
         animation: spin 0.75s linear infinite;
-        margin: 0 auto 12px;
+        margin: 0 auto 13px;
       }
       @keyframes spin {
         to {
           transform: rotate(360deg);
         }
       }
+      .loader p {
+        color: var(--mu);
+        font-size: 0.84rem;
+      }
 
-      @media (max-width: 520px) {
-        .form-row {
-          flex-direction: column;
-        }
-        header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .h-left {
-          flex-direction: row;
-        }
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 18, 12, 0.38);
+        backdrop-filter: blur(5px);
+        z-index: 200;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.2s,
+          visibility 0.2s;
+      }
+      .ov.on {
+        opacity: 1;
+        visibility: visible;
+      }
+      .sheet {
+        position: absolute;
+        bottom: -110%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-radius: 22px 22px 0 0;
+        box-shadow: var(--shlg);
+        transition: bottom 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+      .ov.on .sheet {
+        bottom: 0;
+      }
+      .handle {
+        width: 36px;
+        height: 4px;
+        background: var(--br);
+        border-radius: 4px;
+        margin: 12px auto 0;
+      }
+      .sb {
+        padding: 20px 22px 36px;
+        text-align: center;
+      }
+
+      .s-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 1.35rem;
+      }
+      .ic-g {
+        background: var(--gs);
+        color: var(--g);
+      }
+      .ic-go {
+        background: var(--gos);
+        color: var(--gold);
+      }
+      .ic-b {
+        background: var(--bs);
+        color: var(--blue);
+      }
+      .ic-r {
+        background: var(--rs);
+        color: var(--red);
+      }
+      .s-circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0 auto 16px;
+      }
+      .sc-g {
+        background: var(--gs);
+        color: var(--g);
+      }
+      .sc-teal {
+        background: var(--ts);
+        color: var(--teal);
+      }
+
+      .s-title {
+        font-family: "Amiri", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--tx);
+        margin-bottom: 5px;
+      }
+      .s-sub {
+        font-size: 0.84rem;
+        color: var(--mu);
+        margin-bottom: 20px;
+        line-height: 1.7;
+      }
+      .s-sub strong {
+        color: var(--g);
+        font-weight: 700;
+      }
+
+      .inp {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1.5px solid var(--br);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 500;
+        color: var(--tx);
+        background: var(--bg);
+        outline: none;
+        text-align: right;
+        transition:
+          border-color 0.17s,
+          box-shadow 0.17s;
+        margin-bottom: 9px;
+        display: block;
+      }
+      .inp::placeholder {
+        color: var(--su);
+      }
+      .inp:focus {
+        border-color: var(--g);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(30, 107, 66, 0.09);
+      }
+
+      .cf-box {
+        background: var(--bg);
+        border: 1px solid var(--br);
+        border-radius: 10px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        text-align: right;
+      }
+      .cf-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 13px;
+        border-bottom: 1px solid var(--brl);
+        gap: 10px;
+      }
+      .cf-row:last-child {
+        border-bottom: none;
+      }
+      .cf-lbl {
+        font-size: 0.74rem;
+        color: var(--mu);
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+      .cf-val {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--tx);
+        word-break: break-all;
+      }
+      .cf-val.ar {
+        font-family: "Amiri", serif;
+        font-size: 0.96rem;
+      }
+
+      .btn-m {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        margin-bottom: 8px;
+        transition:
+          background 0.12s,
+          transform 0.08s;
+      }
+      .btn-m:active {
+        transform: scale(0.98);
+      }
+      .btn-m:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .bm-g {
+        background: var(--g);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(30, 107, 66, 0.26);
+      }
+      .bm-g:hover:not(:disabled) {
+        background: var(--gm);
+      }
+      .bm-b {
+        background: var(--blue);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(26, 79, 196, 0.22);
+      }
+      .bm-b:hover:not(:disabled) {
+        background: #1d5ad9;
+      }
+      .bm-r {
+        background: var(--rs);
+        color: var(--red);
+        border: 1px solid rgba(184, 50, 50, 0.18);
+      }
+      .bm-r:hover:not(:disabled) {
+        background: #fde4e4;
+      }
+      .bm-teal {
+        background: var(--ts);
+        color: var(--teal);
+        border: 1px solid rgba(14, 116, 144, 0.2);
+      }
+      .bm-teal:hover:not(:disabled) {
+        background: #c5eef5;
+      }
+      .btn-ghost {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: none;
+        color: var(--mu);
+        font-size: 0.84rem;
+        font-family: "Tajawal", sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      footer {
+        margin-top: 30px;
+        padding: 16px 16px 24px;
+        border-top: 1px solid var(--brl);
+        text-align: center;
+      }
+      .f-inner {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 0.77rem;
+        color: var(--mu);
+      }
+      .f-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--g);
+        font-weight: 700;
+        font-size: 0.84rem;
+        text-decoration: none;
+      }
+      .f-brand:hover {
+        text-decoration: underline;
+      }
+      .f-logo {
+        height: 24px;
+        width: auto;
+        border-radius: 5px;
+        object-fit: contain;
+      }
+
+      .empty {
+        text-align: center;
+        padding: 70px 20px;
+        color: var(--mu);
       }
     </style>
   </head>
   <body>
     <header>
-      <div class="h-left">
-        <img
-          src="https://i.ibb.co/QjFw6J9Y/image.png"
-          alt="احنا النجاح"
-          class="h-logo"
-          onerror="this.style.display = 'none'"
-        />
-        <div class="h-title">لوحة تحكم المطور</div>
+      <div class="h-inner">
+        <div class="h-logo-wrap">
+          <img
+            src="https://i.ibb.co/QjFw6J9Y/image.png"
+            alt="احنا النجاح"
+            class="h-logo"
+            onerror="this.style.display = 'none'"
+          />
+        </div>
+        <h1>مشروع الختمات</h1>
       </div>
-      <div class="h-badge">ADMIN PANEL</div>
     </header>
 
-    <div class="container">
-      <!-- Create -->
-      <div class="card">
-        <div class="card-hdr">
-          <div class="card-hdr-l">
-            <div class="card-lbl">إنشاء</div>
-            <div class="card-title">ختمة جديدة</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="hint">
-            أدخل اسم الختمة ثم اضغط إنشاء — سيتم إنشاء 30 جزءاً تلقائياً.
-          </div>
-          <div class="form-row">
-            <input
-              type="text"
-              id="new-name"
-              class="inp"
-              placeholder="اسم الختمة..."
-            />
-            <button class="btn btn-g" onclick="createKhatma()">
-              إنشاء الختمة
-            </button>
-          </div>
-        </div>
+    <div class="wrap" id="root">
+      <div class="loader">
+        <div class="ring"></div>
+        <p>جاري تحميل الختمات...</p>
       </div>
+    </div>
 
-      <!-- List -->
-      <div id="admin-list">
-        <div class="loader">
-          <div class="ring"></div>
-          <p>جاري التحميل...</p>
+    <div class="ov" id="ov1" onclick="sheetClose(event, 'ov1')">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="sb">
+          <div class="s-icon ic-g">&#x2712;</div>
+          <div class="s-title">حجز الجزء</div>
+          <p class="s-sub">أنت على وشك حجز <strong id="s1-juz"></strong></p>
+          <input
+            type="text"
+            id="s1-name"
+            class="inp"
+            placeholder="الاسم"
+            autocomplete="name"
+          />
+          <input
+            type="text"
+            id="s1-uid"
+            class="inp"
+            placeholder="الرقم الجامعي"
+            inputmode="numeric"
+            autocomplete="off"
+          />
+          <button class="btn-m bm-g" onclick="toConfirm()">التالي</button>
+          <button class="btn-ghost" onclick="hide('ov1')">إلغاء</button>
         </div>
       </div>
     </div>
+
+    <div class="ov" id="ov2" onclick="sheetClose(event, 'ov2')">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="sb">
+          <div class="s-icon ic-go">&#x26A0;</div>
+          <div class="s-title">تأكيد الحجز</div>
+          <p class="s-sub">يرجى مراجعة بياناتك قبل التأكيد</p>
+          <div class="cf-box">
+            <div class="cf-row">
+              <span class="cf-lbl">الجزء</span
+              ><span class="cf-val ar" id="c-juz"></span>
+            </div>
+            <div class="cf-row">
+              <span class="cf-lbl">الاسم</span
+              ><span class="cf-val ar" id="c-name"></span>
+            </div>
+            <div class="cf-row">
+              <span class="cf-lbl">الرقم الجامعي</span
+              ><span class="cf-val" id="c-uid"></span>
+            </div>
+          </div>
+          <button class="btn-m bm-g" id="btn-ok" onclick="doBook()">
+            تأكيد الحجز
+          </button>
+          <button class="btn-ghost" onclick="backToForm()">
+            تعديل البيانات
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ov" id="ov3" onclick="sheetClose(event, 'ov3')">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="sb">
+          <div class="s-circle sc-g">&#x2713;</div>
+          <div class="s-title">تم الحجز بنجاح</div>
+          <p class="s-sub">
+            تقبل الله طاعتكم وجعلها في ميزان حسناتكم.<br />
+            يمكنك البدء بالقراءة الآن أو لاحقاً من هذا الجهاز.
+          </p>
+          <a
+            id="btn-read-now"
+            href="#"
+            target="_blank"
+            class="btn-m bm-b"
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 7px;
+              text-decoration: none;
+            "
+          >
+            &#x1F4D6; اقرأ الجزء الآن
+          </a>
+          <button class="btn-m bm-teal" onclick="hide('ov3')">
+            سأقرأ لاحقاً
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ov" id="ov4" onclick="sheetClose(event, 'ov4')">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="sb">
+          <div class="s-circle sc-teal">&#x2605;</div>
+          <div class="s-title">تأكيد إتمام القراءة</div>
+          <p class="s-sub">
+            هل أتممت قراءة <strong id="done-juz-name"></strong>؟<br />
+            سيتم تسجيل إتمامك وإظهاره للجميع.
+          </p>
+          <button
+            class="btn-m bm-g"
+            id="btn-confirm-done"
+            onclick="doMarkDone()"
+          >
+            نعم، أتممت القراءة
+          </button>
+          <button class="btn-ghost" onclick="hide('ov4')">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ov" id="ov5" onclick="sheetClose(event, 'ov5')">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="sb">
+          <div class="s-circle sc-teal">&#x2605;</div>
+          <div class="s-title">بارك الله فيك</div>
+          <p class="s-sub" style="margin-bottom: 24px">
+            تقبل الله قراءتك وجعلها في ميزان حسناتك،<br />
+            ونسأل الله أن يجعله شفيعاً لك يوم القيامة.
+          </p>
+          <button class="btn-m bm-g" onclick="hide('ov5')">إغلاق</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ov" id="ov6" onclick="sheetClose(event, 'ov6')">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="handle"></div>
+        <div class="sb">
+          <div class="s-icon ic-r">&#x26A0;</div>
+          <div class="s-title">إلغاء الحجز</div>
+          <p class="s-sub">
+            هل أنت متأكد من إلغاء حجزك لـ
+            <strong id="cancel-juz-name"></strong>؟<br />
+            سيصبح الجزء متاحاً لشخص آخر.
+          </p>
+          <button
+            class="btn-m bm-r"
+            id="btn-confirm-cancel"
+            onclick="doCancel()"
+          >
+            نعم، إلغاء الحجز
+          </button>
+          <button class="btn-ghost" onclick="hide('ov6')">تراجع</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="f-inner">
+        <span>تنفيذ بواسطة</span>
+        <a href="#" class="f-brand">
+          <img
+            src="https://i.ibb.co/QjFw6J9Y/image.png"
+            alt="احنا النجاح"
+            class="f-logo"
+            onerror="this.style.display = 'none'"
+          />
+          فريق احنا النجاح
+        </a>
+      </div>
+    </footer>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
       import {
         getFirestore,
         collection,
-        addDoc,
         onSnapshot,
         doc,
         updateDoc,
-        deleteDoc,
-        serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
       const db = getFirestore(
@@ -454,213 +991,332 @@
       );
 
       const JUZS = [
-        "الجزء الأول",
-        "الجزء الثاني",
-        "الجزء الثالث",
-        "الجزء الرابع",
-        "الجزء الخامس",
-        "الجزء السادس",
-        "الجزء السابع",
-        "الجزء الثامن",
-        "الجزء التاسع",
-        "الجزء العاشر",
-        "الجزء الحادي عشر",
-        "الجزء الثاني عشر",
-        "الجزء الثالث عشر",
-        "الجزء الرابع عشر",
-        "الجزء الخامس عشر",
-        "الجزء السادس عشر",
-        "الجزء السابع عشر",
-        "الجزء الثامن عشر",
-        "الجزء التاسع عشر",
-        "الجزء العشرون",
-        "الجزء الحادي والعشرون",
-        "الجزء الثاني والعشرون",
-        "الجزء الثالث والعشرون",
-        "الجزء الرابع والعشرون",
-        "الجزء الخامس والعشرون",
-        "الجزء السادس والعشرون",
-        "الجزء السابع والعشرون",
-        "الجزء الثامن والعشرون",
-        "الجزء التاسع والعشرون",
-        "الجزء الثلاثون",
+        { n: "الجزء الأول", s: "يبدأ بسورة الفاتحة" },
+        { n: "الجزء الثاني", s: "يبدأ بسورة البقرة (186)" },
+        { n: "الجزء الثالث", s: "يبدأ بسورة البقرة (253)" },
+        { n: "الجزء الرابع", s: "يبدأ بسورة آل عمران (92)" },
+        { n: "الجزء الخامس", s: "يبدأ بسورة النساء (24)" },
+        { n: "الجزء السادس", s: "يبدأ بسورة النساء (148)" },
+        { n: "الجزء السابع", s: "يبدأ بسورة المائدة (82)" },
+        { n: "الجزء الثامن", s: "يبدأ بسورة الأنعام (111)" },
+        { n: "الجزء التاسع", s: "يبدأ بسورة الأعراف (88)" },
+        { n: "الجزء العاشر", s: "يبدأ بسورة الأنفال (40)" },
+        { n: "الجزء الحادي عشر", s: "يبدأ بسورة التوبة (93)" },
+        { n: "الجزء الثاني عشر", s: "يبدأ بسورة هود (6)" },
+        { n: "الجزء الثالث عشر", s: "يبدأ بسورة يوسف (53)" },
+        { n: "الجزء الرابع عشر", s: "يبدأ بسورة الحجر" },
+        { n: "الجزء الخامس عشر", s: "يبدأ بسورة الإسراء" },
+        { n: "الجزء السادس عشر", s: "يبدأ بسورة الكهف (75)" },
+        { n: "الجزء السابع عشر", s: "يبدأ بسورة الأنبياء" },
+        { n: "الجزء الثامن عشر", s: "يبدأ بسورة المؤمنون" },
+        { n: "الجزء التاسع عشر", s: "يبدأ بسورة الفرقان (21)" },
+        { n: "الجزء العشرون", s: "يبدأ بسورة النمل (56)" },
+        { n: "الجزء الحادي والعشرون", s: "يبدأ بسورة العنكبوت (46)" },
+        { n: "الجزء الثاني والعشرون", s: "يبدأ بسورة الأحزاب (31)" },
+        { n: "الجزء الثالث والعشرون", s: "يبدأ بسورة يس (28)" },
+        { n: "الجزء الرابع والعشرون", s: "يبدأ بسورة الزمر (32)" },
+        { n: "الجزء الخامس والعشرون", s: "يبدأ بسورة فصلت (47)" },
+        { n: "الجزء السادس والعشرون", s: "يبدأ بسورة الأحقاف" },
+        { n: "الجزء السابع والعشرون", s: "يبدأ بسورة الذاريات (31)" },
+        { n: "الجزء الثامن والعشرون", s: "يبدأ بسورة المجادلة" },
+        { n: "الجزء التاسع والعشرون", s: "يبدأ بسورة الملك" },
+        { n: "الجزء الثلاثون", s: "يبدأ بسورة النبأ" },
       ];
 
-      // store all khatmas data for export
-      let allKhatmas = [];
+      const lsKey = (kid, pnum) => `khatma_booking_${kid}_${pnum}`;
 
-      window.createKhatma = async () => {
-        const inp = document.getElementById("new-name");
-        const name = inp.value.trim();
-        if (!name) return alert("الرجاء إدخال اسم الختمة");
-        const parts = {};
-        for (let i = 1; i <= 30; i++)
-          parts[`part_${i}`] = {
-            number: i,
-            status: "available",
-            reservedBy: "",
-            universityId: "",
-          };
-        try {
-          await addDoc(collection(db, "khatmas"), {
-            name,
-            createdAt: serverTimestamp(),
-            parts,
-          });
-          inp.value = "";
-        } catch (e) {
-          alert("حدث خطأ أثناء الإنشاء");
+      function saveBooking(kid, pnum) {
+        localStorage.setItem(lsKey(kid, pnum), "1");
+      }
+      function isOwner(kid, pnum) {
+        return localStorage.getItem(lsKey(kid, pnum)) === "1";
+      }
+      function clearBooking(kid, pnum) {
+        localStorage.removeItem(lsKey(kid, pnum));
+      }
+
+      function myBookings() {
+        const results = [];
+        for (let k in localStorage) {
+          if (k.startsWith("khatma_booking_")) {
+            const parts = k.split("_");
+
+            const pnum = parseInt(parts[parts.length - 1]);
+            const kid = parts.slice(2, parts.length - 1).join("_");
+            if (!isNaN(pnum)) results.push({ kid, pnum });
+          }
         }
-      };
+        return results;
+      }
+
+      let KID = null,
+        PNUM = null;
 
       onSnapshot(collection(db, "khatmas"), (snap) => {
-        const root = document.getElementById("admin-list");
+        const root = document.getElementById("root");
         root.innerHTML = "";
-        allKhatmas = [];
         if (snap.empty) {
-          root.innerHTML = `<div class="loader"><p>لا توجد ختمات.</p></div>`;
+          root.innerHTML = `<div class="empty"><p>لا توجد ختمات متاحة حالياً</p></div>`;
           return;
         }
+
         let list = [];
         snap.forEach((d) => list.push({ id: d.id, ...d.data() }));
         list.sort(
           (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0),
         );
-        allKhatmas = list;
+
+        const myB = myBookings();
+        myB.forEach(({ kid, pnum }) => {
+          const km = list.find((k) => k.id === kid);
+          if (!km) return;
+          const part = km.parts[`part_${pnum}`];
+          if (!part || part.status !== "reserved") {
+            clearBooking(kid, pnum);
+            return;
+          }
+          const juz = JUZS[pnum - 1];
+          const isDone = !!part.completed;
+          const readLink = `https://quran.com/ar/juz/${pnum}`;
+          const banner = document.createElement("div");
+          banner.className = "my-banner";
+          banner.innerHTML = `
+        <div class="mb-left">
+          <div class="mb-label">حجزك</div>
+          <div class="mb-juz">${juz.n} — ${km.name}</div>
+          <div class="mb-sub">${juz.s}</div>
+          ${isDone ? `<div class="mb-done-chip">تمت القراءة</div>` : ""}
+        </div>
+        <div class="mb-actions">
+          <a href="${readLink}" target="_blank" class="btn-banner bb-read">اقرأ الجزء</a>
+          ${
+            isDone
+              ? `<button class="btn-banner bb-done completed" disabled>تمت القراءة</button>`
+              : `<button class="btn-banner bb-done" onclick="askDone('${kid}',${pnum},'${juz.n.replace(/'/g, "\\'")}')">أتممت القراءة</button>`
+          }
+          <button class="btn-banner bb-cancel" onclick="askCancel('${kid}',${pnum},'${juz.n.replace(/'/g, "\\'")}')">إلغاء حجزي</button>
+        </div>`;
+          root.appendChild(banner);
+        });
 
         list.forEach((km) => {
-          const parts = Object.values(km.parts);
-          const res = parts.filter((p) => p.status === "reserved").length;
-          const av = 30 - res;
+          const res = Object.values(km.parts).filter(
+            (p) => p.status === "reserved",
+          ).length;
           let html = "";
           for (let i = 1; i <= 30; i++) {
             const p = km.parts[`part_${i}`],
-              av2 = p.status === "available";
-            if (av2) {
-              html += `<div class="pa av"><div class="pa-num">جزء ${i}</div><div class="pa-name">${JUZS[i - 1]}</div><div class="pa-status">متاح</div></div>`;
+              j = JUZS[i - 1];
+            const link = `https://quran.com/ar/juz/${i}`;
+            const av = p.status === "available";
+            const mine = !av && isOwner(km.id, i);
+            const isDone = mine && !!p.completed;
+
+            if (av) {
+              html += `<div class="pi av" onclick="openBook('${km.id}',${i},'${j.n.replace(/'/g, "\\'")}')">
+            <div class="p-num">جزء ${i}</div>
+            <div class="p-name">${j.n}</div>
+            <div class="p-surah">${j.s}</div>
+            <div class="p-row">
+              <span class="tag tag-cta">احجز</span>
+              <a href="${link}" target="_blank" onclick="event.stopPropagation()" class="rd">قراءة</a>
+            </div>
+          </div>`;
+            } else if (mine) {
+              html += `<div class="pi mine ${isDone ? "done" : ""}" onclick="openBook('${km.id}',${i},'${j.n.replace(/'/g, "\\'")}')">
+            <div class="p-num">جزء ${i}</div>
+            <div class="p-name">${j.n}</div>
+            <div class="p-surah">${j.s}</div>
+            <div class="p-row">
+              ${
+                isDone
+                  ? `<span class="tag tag-done">تمت القراءة</span>`
+                  : `<span class="tag tag-mine">حجزك</span>`
+              }
+              <a href="${link}" target="_blank" onclick="event.stopPropagation()" class="rd">قراءة</a>
+            </div>
+          </div>`;
             } else {
-              const uid = p.universityId
-                ? `<div class="rsv-uid">${p.universityId}</div>`
-                : "";
-              html += `<div class="pa rs" onclick="resetPart('${km.id}',${i},'${p.reservedBy.replace(/'/g, "\\'")}')">
-              <div class="pa-num">جزء ${i}</div><div class="pa-name">${JUZS[i - 1]}</div>
-              <div class="rsv-chip">${p.reservedBy}</div>${uid}
-              ${p.completed ? '<div style="font-size:.61rem;font-weight:700;color:#fff;background:#3fa05e;padding:2px 7px;border-radius:4px;margin-top:3px;display:inline-block">تمت القراءة</div>' : ""}
-              <div class="hint-rs">اضغط لإلغاء الحجز</div>
-            </div>`;
+              html += `<div class="pi rs">
+            <div class="p-num">جزء ${i}</div>
+            <div class="p-name">${j.n}</div>
+            <div class="p-surah">${j.s}</div>
+            <div class="p-row">
+              <span class="tag tag-rs"><span class="dot"></span>${p.reservedBy}</span>
+              <a href="${link}" target="_blank" class="rd">قراءة</a>
+            </div>
+          </div>`;
             }
           }
+
           const card = document.createElement("div");
-          card.className = "card";
+          card.className = "khatma-card";
+          const done = Object.values(km.parts).filter(
+            (p) => p.completed && p.status === "reserved",
+          ).length;
+          const bookedPct = ((res / 30) * 100).toFixed(1);
+          const donePct = ((done / 30) * 100).toFixed(1);
+
+          const marks = [25, 50, 75]
+            .map((m) => `<div class="prog-mark" style="right:${m}%"></div>`)
+            .join("");
           card.innerHTML = `
-          <div class="card-hdr">
-            <div class="card-hdr-l">
-              <div class="card-lbl">ختمة</div>
-              <div class="card-title">${km.name}</div>
+        <div class="khatma-hdr">
+          <div class="khatma-name">${km.name}</div>
+          <div class="khatma-badge"><b>${res}</b> / 30 محجوز</div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-labels">
+            <span class="prog-title">التقدم في الختمة</span>
+            <div class="prog-nums">
+              <span class="prog-num"><span class="prog-dot pd-done"></span><span style="color:var(--g)">${done}</span>&nbsp;مكتمل</span>
+              <span class="prog-num"><span class="prog-dot pd-booked"></span><span style="color:var(--mu)">${res - done}</span>&nbsp;محجوز</span>
+              <span class="prog-num"><span class="prog-dot pd-avail"></span><span style="color:var(--su)">${30 - res}</span>&nbsp;متاح</span>
             </div>
-            <button class="btn btn-d" onclick="delKhatma('${km.id}')">حذف الختمة</button>
           </div>
-          <div class="stats-bar">
-            <span class="stat"><b>${res}</b> محجوزة</span><span class="sep">|</span>
-            <span class="stat"><b>${av}</b> متاحة</span><span class="sep">|</span>
-            <span class="stat">من أصل <b>30</b></span>
+          <div class="prog-track">
+            <div class="prog-milestones">${marks}</div>
+            <div class="prog-fill pf-booked" style="width:${bookedPct}%"></div>
+            <div class="prog-fill pf-done"   style="width:${donePct}%"></div>
           </div>
-          <div class="actions-row">
-            <button class="btn btn-xl" onclick="exportExcel('${km.id}')">تصدير Excel</button>
-          </div>
-          <div class="parts-grid">${html}</div>`;
+        </div>
+        <div class="parts-grid">${html}</div>`;
           root.appendChild(card);
         });
       });
 
-      window.resetPart = async (kid, num, uname) => {
-        if (!confirm(`إلغاء حجز "${uname}" للجزء ${num}؟`)) return;
-        await updateDoc(doc(db, "khatmas", kid), {
-          [`parts.part_${num}.status`]: "available",
-          [`parts.part_${num}.reservedBy`]: "",
-          [`parts.part_${num}.universityId`]: "",
-        });
+      window.openBook = (kid, pnum, jname) => {
+        if (isOwner(kid, pnum)) return;
+        KID = kid;
+        PNUM = pnum;
+        document.getElementById("s1-juz").textContent = jname;
+        document.getElementById("s1-name").value = "";
+        document.getElementById("s1-uid").value = "";
+        show("ov1");
+        setTimeout(() => document.getElementById("s1-name").focus(), 340);
       };
 
-      window.delKhatma = async (kid) => {
-        if (!confirm("سيتم حذف الختمة وجميع حجوزاتها نهائياً. متأكد؟")) return;
-        await deleteDoc(doc(db, "khatmas", kid));
+      window.toConfirm = () => {
+        const name = document.getElementById("s1-name").value.trim();
+        const uid = document.getElementById("s1-uid").value.trim();
+        if (!name) return alert("الرجاء كتابة الاسم");
+        if (!uid) return alert("الرجاء كتابة الرقم الجامعي");
+        document.getElementById("c-juz").textContent =
+          document.getElementById("s1-juz").textContent;
+        document.getElementById("c-name").textContent = name;
+        document.getElementById("c-uid").textContent = uid;
+        hide("ov1");
+        setTimeout(() => show("ov2"), 270);
       };
 
-      // ─── Excel Export ───
-      window.exportExcel = (kid) => {
-        const km = allKhatmas.find((k) => k.id === kid);
-        if (!km) {
-          alert("لم يتم العثور على بيانات الختمة");
-          return;
+      window.backToForm = () => {
+        hide("ov2");
+        setTimeout(() => show("ov1"), 270);
+      };
+
+      window.doBook = async () => {
+        const name = document.getElementById("s1-name").value.trim();
+        const uid = document.getElementById("s1-uid").value.trim();
+        if (!name || !uid || !KID || !PNUM)
+          return alert("بيانات ناقصة، حاول مرة أخرى.");
+        const btn = document.getElementById("btn-ok");
+        btn.textContent = "جاري الحجز...";
+        btn.disabled = true;
+        try {
+          await updateDoc(doc(db, "khatmas", KID), {
+            [`parts.part_${PNUM}.status`]: "reserved",
+            [`parts.part_${PNUM}.reservedBy`]: name,
+            [`parts.part_${PNUM}.universityId`]: uid,
+            [`parts.part_${PNUM}.completed`]: false,
+          });
+
+          saveBooking(KID, PNUM);
+
+          document.getElementById("btn-read-now").href =
+            `https://quran.com/ar/juz/${PNUM}`;
+          const savedKID = KID,
+            savedPNUM = PNUM;
+          KID = null;
+          PNUM = null;
+          hide("ov2");
+          setTimeout(() => show("ov3"), 270);
+        } catch (e) {
+          console.error(e);
+          alert("حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مجدداً.");
+        } finally {
+          btn.textContent = "تأكيد الحجز";
+          btn.disabled = false;
         }
+      };
 
-        // Build rows
-        const rows = [];
-        // Header row
-        rows.push([
-          "رقم الجزء",
-          "اسم الجزء",
-          "الحالة",
-          "الاسم",
-          "الرقم الجامعي",
-          "تمت القراءة",
-        ]);
+      window.askDone = (kid, pnum, jname) => {
+        KID = kid;
+        PNUM = pnum;
+        document.getElementById("done-juz-name").textContent = jname;
+        show("ov4");
+      };
 
-        for (let i = 1; i <= 30; i++) {
-          const p = km.parts[`part_${i}`];
-          const isRes = p.status === "reserved";
-          rows.push([
-            i,
-            JUZS[i - 1],
-            isRes ? "محجوز" : "متاح",
-            isRes ? p.reservedBy : "",
-            isRes ? p.universityId || "" : "",
-            isRes ? (p.completed ? "نعم" : "لا") : "",
-          ]);
+      window.doMarkDone = async () => {
+        if (!KID || !PNUM) return;
+        const btn = document.getElementById("btn-confirm-done");
+        btn.textContent = "جاري التسجيل...";
+        btn.disabled = true;
+        try {
+          await updateDoc(doc(db, "khatmas", KID), {
+            [`parts.part_${PNUM}.completed`]: true,
+          });
+          KID = null;
+          PNUM = null;
+          hide("ov4");
+          setTimeout(() => show("ov5"), 270);
+        } catch (e) {
+          alert("حدث خطأ، حاول مرة أخرى.");
+        } finally {
+          btn.textContent = "نعم، أتممت القراءة";
+          btn.disabled = false;
         }
+      };
 
-        // Summary rows
-        const resCount = Object.values(km.parts).filter(
-          (p) => p.status === "reserved",
-        ).length;
-        rows.push([]);
-        rows.push([
-          "إجمالي المحجوز",
-          resCount,
-          "إجمالي المتاح",
-          30 - resCount,
-          "",
-        ]);
+      window.askCancel = (kid, pnum, jname) => {
+        KID = kid;
+        PNUM = pnum;
+        document.getElementById("cancel-juz-name").textContent = jname;
+        show("ov6");
+      };
 
-        const ws = XLSX.utils.aoa_to_sheet(rows);
+      window.doCancel = async () => {
+        if (!KID || !PNUM) return;
+        const btn = document.getElementById("btn-confirm-cancel");
+        btn.textContent = "جاري الإلغاء...";
+        btn.disabled = true;
+        try {
+          await updateDoc(doc(db, "khatmas", KID), {
+            [`parts.part_${PNUM}.status`]: "available",
+            [`parts.part_${PNUM}.reservedBy`]: "",
+            [`parts.part_${PNUM}.universityId`]: "",
+            [`parts.part_${PNUM}.completed`]: false,
+          });
+          clearBooking(KID, PNUM);
+          KID = null;
+          PNUM = null;
+          hide("ov6");
+        } catch (e) {
+          alert("حدث خطأ، حاول مرة أخرى.");
+        } finally {
+          btn.textContent = "نعم، إلغاء الحجز";
+          btn.disabled = false;
+        }
+      };
 
-        // Column widths
-        ws["!cols"] = [
-          { wch: 12 },
-          { wch: 26 },
-          { wch: 12 },
-          { wch: 20 },
-          { wch: 18 },
-          { wch: 14 },
-        ];
-
-        // RTL direction hint (for apps that support it)
-        ws["!dir"] = "rtl";
-
-        // Style header row cells bold (basic)
-        ["A1", "B1", "C1", "D1", "E1", "F1"].forEach((cell) => {
-          if (ws[cell])
-            ws[cell].s = {
-              font: { bold: true },
-              fill: { fgColor: { rgb: "D4EDDA" } },
-              alignment: { horizontal: "center" },
-            };
-        });
-
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "الختمة");
-        XLSX.writeFile(wb, `${km.name}.xlsx`);
+      function show(id) {
+        document.getElementById(id).classList.add("on");
+      }
+      function hide(id) {
+        document.getElementById(id).classList.remove("on");
+      }
+      window.hide = hide;
+      window.sheetClose = (e, id) => {
+        if (e.target.id === id) hide(id);
       };
     </script>
   </body>
